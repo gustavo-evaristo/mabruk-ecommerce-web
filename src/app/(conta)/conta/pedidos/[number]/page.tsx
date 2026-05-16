@@ -84,7 +84,7 @@ export default async function OrderDetailsPage({ params }: Props) {
             Cartão Visa · final 4291
           </div>
           <div className="mt-1.5 text-body-xs text-ink-60">
-            2x de <span className="font-mono nums">{formatMoney(24445)}</span> sem juros
+            6x de <span className="font-mono nums">{formatMoney(8148)}</span> sem juros
           </div>
         </div>
       </section>

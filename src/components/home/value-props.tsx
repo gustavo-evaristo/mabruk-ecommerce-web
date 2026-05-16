@@ -2,9 +2,9 @@ import { Container } from '@/components/ui/container';
 import { Icon, type IconName } from '@/components/ui/icon';
 
 const PROPS: { icon: IconName; title: string; desc: string }[] = [
-  { icon: 'truck', title: 'Frete grátis', desc: 'Acima de R$ 299, todo o Brasil' },
+  { icon: 'truck', title: 'Frete grátis', desc: 'Acima de R$ 300,00, todo o Brasil' },
   { icon: 'pkg', title: 'Embalagem presente', desc: 'Caixa Mabruk em todas as compras' },
-  { icon: 'creditCard', title: 'Parcelamento', desc: 'Em até 2x sem juros no cartão' },
+  { icon: 'creditCard', title: 'Parcelamento', desc: 'Em até 6x sem juros no cartão' },
   { icon: 'check', title: 'Garantia 12 meses', desc: 'Contra defeitos de fabricação' },
 ];
 

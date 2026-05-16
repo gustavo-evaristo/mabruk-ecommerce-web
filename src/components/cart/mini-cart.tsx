@@ -11,8 +11,8 @@ import { cn } from '@/lib/utils/cn';
 
 const BANHO_LABEL: Record<string, string> = {
   OURO_18K: 'Ouro 18k',
-  RODIO: 'Prata 925',
-  OURO_ROSE: 'Ouro rosé',
+  PRATA_925: 'Prata 925',
+  ACO_INOX: 'Aço inoxidável',
 };
 
 export function MiniCart() {

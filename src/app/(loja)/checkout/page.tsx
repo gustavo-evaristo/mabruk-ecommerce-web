@@ -15,12 +15,12 @@ type PaymentMethod = 'credit' | 'pix';
 
 const SHIPPING_PRICE_CENTS = 2990;
 const PIX_DISCOUNT = 0.1;
-const MAX_INSTALLMENTS = 2;
+const MAX_INSTALLMENTS = 6;
 
 const BANHO_LABEL: Record<string, string> = {
   OURO_18K: 'Ouro 18k',
-  RODIO: 'Prata 925',
-  OURO_ROSE: 'Ouro rosé',
+  PRATA_925: 'Prata 925',
+  ACO_INOX: 'Aço inoxidável',
 };
 
 export default function CheckoutPage() {
@@ -245,7 +245,7 @@ export default function CheckoutPage() {
                       />
                       <Icon name="creditCard" size={20} />
                       <span className="flex-1 text-body font-medium">Cartão de crédito</span>
-                      <span className="text-body-xs text-ink-60">Até 2x sem juros</span>
+                      <span className="text-body-xs text-ink-60">Até 6x sem juros</span>
                     </label>
                     {payment === 'credit' && (
                       <div className="flex flex-col gap-4 border-t border-line px-5 py-5">

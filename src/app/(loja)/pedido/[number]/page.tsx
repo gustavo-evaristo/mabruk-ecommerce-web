@@ -125,7 +125,7 @@ export default async function PedidoConfirmacaoPage({ params, searchParams }: Pr
               </div>
               {!isPix && (
                 <div className="mt-1.5 text-body-xs text-ink-60">
-                  em 2x de <span className="font-mono nums">{formatMoney(installmentValue(total, 2))}</span> sem juros
+                  em 6x de <span className="font-mono nums">{formatMoney(installmentValue(total, 6))}</span> sem juros
                 </div>
               )}
             </div>

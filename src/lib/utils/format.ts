@@ -29,7 +29,7 @@ export function formatPhone(phone: string): string {
 
 /**
  * Calcula valor da parcela arredondado em centavos.
- * Útil para mostrar "ou 2x de R$ 74,95 sem juros"
+ * Útil para mostrar "ou 6x de R$ 24,98 sem juros"
  */
 export function installmentValue(totalCents: number, installments: number): number {
   return Math.round(totalCents / installments);

@@ -8,7 +8,7 @@ const IMAGE_URL =
   'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1400&q=80';
 
 const STATS = [
-  { value: 'R$ 0', label: 'Investimento inicial' },
+  { value: 'R$ 0,00', label: 'Investimento inicial' },
   { value: '35-45%', label: 'Comissão por venda' },
   { value: 'Brasil', label: 'Atendimento nacional' },
 ];

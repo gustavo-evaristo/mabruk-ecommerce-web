@@ -89,9 +89,8 @@ const CATEGORIAS_MEGA: MegaMenu = {
       title: 'Por material',
       links: [
         { label: 'Banho de ouro 18k', href: '/material/ouro-18k' as Route },
-        { label: 'Banho ouro rosé', href: '/material/ouro-rose' as Route },
         { label: 'Prata 925', href: '/material/prata-925' as Route },
-        { label: 'Ródio negro', href: '/material/rodio-negro' as Route },
+        { label: 'Aço inoxidável', href: '/material/aco-inox' as Route },
       ],
     },
   ],
@@ -184,13 +183,6 @@ export function Header() {
               type="button"
               className="inline-flex items-center gap-2 hover:text-ink"
             >
-              <Icon name="map" size={14} stroke={1.2} />
-              Informar CEP
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 hover:text-ink"
-            >
               <Icon name="truck" size={14} stroke={1.2} />
               Rastrear pedido
             </button>
@@ -257,16 +249,30 @@ export function Header() {
                 onMouseEnter={() => setOpenKey(item.mega ? item.key : null)}
                 className="flex h-full items-center"
               >
-                <Link
-                  href={item.href}
-                  className={cn(
-                    '-mb-px inline-flex h-full items-center gap-1.5 border-b-2 text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
-                    isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
-                  )}
-                >
-                  {item.label}
-                  {item.mega && <Icon name="chevronDown" size={10} stroke={1.5} />}
-                </Link>
+                {item.mega ? (
+                  <button
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded={isOpen}
+                    className={cn(
+                      '-mb-px inline-flex h-full cursor-default items-center gap-1.5 border-b-2 bg-transparent text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
+                      isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
+                    )}
+                  >
+                    {item.label}
+                    <Icon name="chevronDown" size={10} stroke={1.5} />
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      '-mb-px inline-flex h-full items-center gap-1.5 border-b-2 text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
+                      isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </div>
             );
           })}

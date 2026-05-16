@@ -13,7 +13,7 @@ const HERO_IMAGE =
   'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1400&q=80';
 
 const STATS = [
-  { value: 'R$ 0', label: 'Investimento inicial' },
+  { value: 'R$ 0,00', label: 'Investimento inicial' },
   { value: 'Até 45%', label: 'De comissão' },
   { value: 'Brasil', label: 'Atendemos todo o país' },
 ];
@@ -197,7 +197,6 @@ export default function RevendedorasPage() {
             <div className="absolute top-8 right-8 max-w-[260px] bg-paper/95 px-4 py-3 backdrop-blur-sm">
               <div className="eyebrow !text-ink-60">Enviamos para</div>
               <div className="mt-1 font-display text-h6">todo o Brasil</div>
-              <div className="font-mono nums text-body-xs text-ink-80">via Correios</div>
             </div>
           </div>
         </div>

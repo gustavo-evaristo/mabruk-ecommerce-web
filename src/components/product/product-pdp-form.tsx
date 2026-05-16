@@ -13,15 +13,15 @@ import { useCart } from '@/lib/providers/cart-provider';
 
 const BANHO_INFO: Record<Banho, { label: string; color: string }> = {
   OURO_18K: { label: 'Ouro 18k', color: '#D9C9A8' },
-  OURO_ROSE: { label: 'Ouro rosé', color: '#E8C4B8' },
-  RODIO: { label: 'Prata 925', color: '#D8D5CE' },
+  PRATA_925: { label: 'Prata 925', color: '#D8D5CE' },
+  ACO_INOX: { label: 'Aço inoxidável', color: '#B8BCC2' },
 };
 
 interface Props {
   product: ProductDetails;
 }
 
-const INSTALLMENTS = 2;
+const INSTALLMENTS = 6;
 
 export function ProductPdpForm({ product }: Props) {
   const cart = useCart();

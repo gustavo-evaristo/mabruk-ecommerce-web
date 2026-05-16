@@ -11,7 +11,7 @@ const MOCK_ORDERS = [
     status: 'preparando' as const,
     totalCents: 48890,
     items: 2,
-    payment: 'Cartão · 2x',
+    payment: 'Cartão · 6x',
     shipping: 'SEDEX · prev. 19-21 mai',
   },
   {
@@ -29,7 +29,7 @@ const MOCK_ORDERS = [
     status: 'entregue' as const,
     totalCents: 72950,
     items: 4,
-    payment: 'Cartão · 2x',
+    payment: 'Cartão · 6x',
     shipping: 'Entregue em 18 fev',
   },
   {

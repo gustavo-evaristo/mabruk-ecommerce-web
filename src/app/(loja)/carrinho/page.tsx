@@ -13,12 +13,12 @@ import { formatMoney, installmentValue } from '@/lib/utils/format';
 
 const BANHO_LABEL: Record<string, string> = {
   OURO_18K: 'Ouro 18k',
-  RODIO: 'Prata 925',
-  OURO_ROSE: 'Ouro rosé',
+  PRATA_925: 'Prata 925',
+  ACO_INOX: 'Aço inoxidável',
 };
 
-const FREE_SHIPPING_THRESHOLD = 29900;
-const INSTALLMENTS = 2;
+const FREE_SHIPPING_THRESHOLD = 30000;
+const INSTALLMENTS = 6;
 
 export default function CartPage() {
   const { items, subtotalCents, totalItems, updateQuantity, removeItem } = useCart();

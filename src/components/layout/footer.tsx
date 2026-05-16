@@ -44,7 +44,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-line bg-cream">
+    <footer className="border-t border-line bg-paper">
       <Container className="py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">

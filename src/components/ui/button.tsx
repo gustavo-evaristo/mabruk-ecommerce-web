@@ -39,7 +39,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'btn-pill rounded-sm disabled:cursor-not-allowed disabled:opacity-40',
+        'btn-pill cursor-pointer rounded-sm disabled:cursor-not-allowed disabled:opacity-40',
         sizeClasses[size],
         variantClasses[variant],
         fullWidth && 'w-full',

@@ -10,7 +10,7 @@
 // Catálogo — Product
 // ============================================================
 
-export type Banho = 'OURO_18K' | 'RODIO' | 'OURO_ROSE';
+export type Banho = 'OURO_18K' | 'PRATA_925' | 'ACO_INOX';
 export type ProductStatus = 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
 
 export interface ProductVariant {

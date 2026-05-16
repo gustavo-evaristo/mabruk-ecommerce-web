@@ -40,9 +40,9 @@ const RAW: RawProduct[] = [
       { banho: 'OURO_18K', size: '14', priceCents: 18900, stock: 6 },
       { banho: 'OURO_18K', size: '16', priceCents: 18900, stock: 8 },
       { banho: 'OURO_18K', size: '18', priceCents: 18900, stock: 4 },
-      { banho: 'RODIO', size: '14', priceCents: 14900, stock: 5 },
-      { banho: 'RODIO', size: '16', priceCents: 14900, stock: 7 },
-      { banho: 'RODIO', size: '18', priceCents: 14900, stock: 3 },
+      { banho: 'PRATA_925', size: '14', priceCents: 14900, stock: 5 },
+      { banho: 'PRATA_925', size: '16', priceCents: 14900, stock: 7 },
+      { banho: 'PRATA_925', size: '18', priceCents: 14900, stock: 3 },
     ],
     weightInGrams: 3,
   },
@@ -81,8 +81,8 @@ const RAW: RawProduct[] = [
     variantConfigs: [
       { banho: 'OURO_18K', size: '14', priceCents: 15900, stock: 12 },
       { banho: 'OURO_18K', size: '16', priceCents: 15900, stock: 14 },
-      { banho: 'RODIO', size: '14', priceCents: 12900, stock: 10 },
-      { banho: 'RODIO', size: '16', priceCents: 12900, stock: 8 },
+      { banho: 'PRATA_925', size: '14', priceCents: 12900, stock: 10 },
+      { banho: 'PRATA_925', size: '16', priceCents: 12900, stock: 8 },
     ],
     weightInGrams: 2,
   },
@@ -100,8 +100,8 @@ const RAW: RawProduct[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
-      { banho: 'OURO_ROSE', size: '15', priceCents: 19900, stock: 4 },
-      { banho: 'OURO_ROSE', size: '17', priceCents: 19900, stock: 4 },
+      { banho: 'ACO_INOX', size: '15', priceCents: 19900, stock: 4 },
+      { banho: 'ACO_INOX', size: '17', priceCents: 19900, stock: 4 },
       { banho: 'OURO_18K', size: '15', priceCents: 19900, stock: 3 },
     ],
     weightInGrams: 3,
@@ -121,7 +121,7 @@ const RAW: RawProduct[] = [
       'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
       { banho: 'OURO_18K', size: 'UNICO', priceCents: 16900, stock: 18 },
-      { banho: 'RODIO', size: 'UNICO', priceCents: 13900, stock: 14 },
+      { banho: 'PRATA_925', size: 'UNICO', priceCents: 13900, stock: 14 },
     ],
     weightInGrams: 4,
   },
@@ -139,7 +139,7 @@ const RAW: RawProduct[] = [
       'https://images.unsplash.com/photo-1583937443566-6fe1a1c6e400?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
       { banho: 'OURO_18K', size: 'UNICO', priceCents: 22900, stock: 5 },
-      { banho: 'OURO_ROSE', size: 'UNICO', priceCents: 22900, stock: 3 },
+      { banho: 'ACO_INOX', size: 'UNICO', priceCents: 22900, stock: 3 },
     ],
     weightInGrams: 5,
   },
@@ -157,7 +157,7 @@ const RAW: RawProduct[] = [
       'https://images.unsplash.com/photo-1603561596112-db542d0afe44?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
       { banho: 'OURO_18K', size: 'UNICO', priceCents: 12900, stock: 28 },
-      { banho: 'RODIO', size: 'UNICO', priceCents: 9900, stock: 22 },
+      { banho: 'PRATA_925', size: 'UNICO', priceCents: 9900, stock: 22 },
     ],
     weightInGrams: 2,
   },
@@ -175,7 +175,7 @@ const RAW: RawProduct[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
-      { banho: 'OURO_ROSE', size: 'UNICO', priceCents: 25900, stock: 3 },
+      { banho: 'ACO_INOX', size: 'UNICO', priceCents: 25900, stock: 3 },
       { banho: 'OURO_18K', size: 'UNICO', priceCents: 25900, stock: 3 },
     ],
     weightInGrams: 8,
@@ -195,7 +195,7 @@ const RAW: RawProduct[] = [
     variantConfigs: [
       { banho: 'OURO_18K', size: '38cm', priceCents: 24900, stock: 9 },
       { banho: 'OURO_18K', size: '42cm', priceCents: 24900, stock: 10 },
-      { banho: 'RODIO', size: '38cm', priceCents: 19900, stock: 6 },
+      { banho: 'PRATA_925', size: '38cm', priceCents: 19900, stock: 6 },
     ],
     weightInGrams: 6,
   },
@@ -232,7 +232,7 @@ const RAW: RawProduct[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
-      { banho: 'OURO_ROSE', size: '40cm', priceCents: 31900, stock: 4 },
+      { banho: 'ACO_INOX', size: '40cm', priceCents: 31900, stock: 4 },
       { banho: 'OURO_18K', size: '40cm', priceCents: 31900, stock: 5 },
     ],
     weightInGrams: 7,
@@ -250,7 +250,7 @@ const RAW: RawProduct[] = [
       'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
       { banho: 'OURO_18K', size: '40+45cm', priceCents: 19900, stock: 11 },
-      { banho: 'RODIO', size: '40+45cm', priceCents: 15900, stock: 9 },
+      { banho: 'PRATA_925', size: '40+45cm', priceCents: 15900, stock: 9 },
     ],
     weightInGrams: 8,
   },
@@ -286,7 +286,7 @@ const RAW: RawProduct[] = [
       'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1200&q=80',
     variantConfigs: [
       { banho: 'OURO_18K', size: 'M', priceCents: 26900, stock: 7 },
-      { banho: 'OURO_ROSE', size: 'M', priceCents: 26900, stock: 6 },
+      { banho: 'ACO_INOX', size: 'M', priceCents: 26900, stock: 6 },
     ],
     weightInGrams: 11,
   },

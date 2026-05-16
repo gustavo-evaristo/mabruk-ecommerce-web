@@ -44,7 +44,7 @@ export function Hero() {
             {[
               { label: 'Banho de', value: 'Ouro 18k' },
               { label: 'Garantia', value: '12 meses' },
-              { label: 'Frete grátis acima', value: 'R$ 299' },
+              { label: 'Frete grátis acima', value: 'R$ 300,00' },
             ].map((s) => (
               <div key={s.label} className="flex flex-col gap-1">
                 <div className="eyebrow !text-ink-60">{s.label}</div>
@@ -68,7 +68,7 @@ export function Hero() {
               <div className="eyebrow !text-ink-60">Em destaque</div>
               <div className="mt-1 font-display text-h6">Colar Pingente Lumière</div>
               <div className="font-mono nums text-body-sm text-ink-80">
-                R$ 289,00 · até 2x sem juros
+                R$ 289,00 · até 6x sem juros
               </div>
             </div>
           </div>

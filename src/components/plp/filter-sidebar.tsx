@@ -63,8 +63,8 @@ interface Props {
 
 const BANHOS = [
   { value: 'OURO_18K' as const, label: 'Ouro 18k' },
-  { value: 'OURO_ROSE' as const, label: 'Ouro rosé' },
-  { value: 'RODIO' as const, label: 'Prata 925' },
+  { value: 'PRATA_925' as const, label: 'Prata 925' },
+  { value: 'ACO_INOX' as const, label: 'Aço inoxidável' },
 ];
 
 export function FilterSidebar({ categories, collections, tags, activeCategorySlug }: Props) {

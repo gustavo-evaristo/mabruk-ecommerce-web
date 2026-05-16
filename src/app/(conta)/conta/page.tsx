@@ -15,7 +15,7 @@ const LAST_ORDER = {
   status: 'Em preparação',
   totalCents: 48890,
   items: 2,
-  payment: 'Cartão · 2x',
+  payment: 'Cartão · 6x',
 };
 
 const TIMELINE = [

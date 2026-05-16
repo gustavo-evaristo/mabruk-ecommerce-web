@@ -15,7 +15,7 @@ interface ProductCardProps {
   compact?: boolean;
 }
 
-const INSTALLMENTS = 2;
+const INSTALLMENTS = 6;
 
 export function ProductCard({ product, badges, compact }: ProductCardProps) {
   const priceCents = product.priceFromCents;
