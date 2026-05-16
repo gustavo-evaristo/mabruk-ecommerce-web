@@ -1,0 +1,271 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   Mabruk Semijoias — Design Tokens (Tailwind v4 @theme)
+   Tokens da fonte: design_handoff_mabruk_b2c/tokens/
+   ============================================================ */
+
+@theme {
+  /* ──── COLORS ──── */
+  --color-paper: #ffffff;
+  --color-cream: #f8f5f0;
+  --color-line: #e8e2d8;
+
+  --color-ink: #0a0a0a;
+  --color-ink-80: #2a2622;
+  --color-ink-60: #6b6660;
+  --color-ink-40: #9a938a;
+  --color-ink-20: #c9c2b7;
+
+  --color-champagne: #d9c9a8;
+  --color-champagne-dark: #a8946f;
+  --color-rose: #c9a8a0;
+
+  --color-success: #3d6a4e;
+  --color-sale: #8c3a2e;
+
+  /* ──── FONTS (variáveis carregadas via next/font no layout.tsx) ──── */
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --font-sans: var(--font-manrope), 'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ──── FONT SIZES (utilities `text-*`) ──── */
+  --text-eyebrow-xs: 9px;
+  --text-eyebrow-xs--line-height: 1.4;
+  --text-eyebrow-xs--letter-spacing: 0.14em;
+
+  --text-eyebrow-sm: 10px;
+  --text-eyebrow-sm--line-height: 1.4;
+  --text-eyebrow-sm--letter-spacing: 0.16em;
+
+  --text-eyebrow: 11px;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.14em;
+
+  --text-body-xs: 11px;
+  --text-body-xs--line-height: 1.5;
+  --text-body-sm: 12px;
+  --text-body-sm--line-height: 1.5;
+  --text-body: 13px;
+  --text-body--line-height: 1.6;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 1.6;
+  --text-body-lg: 15px;
+  --text-body-lg--line-height: 1.7;
+  --text-body-xl: 16px;
+  --text-body-xl--line-height: 1.6;
+  --text-lead: 18px;
+  --text-lead--line-height: 1.5;
+
+  --text-h6: 22px;
+  --text-h6--line-height: 1.3;
+  --text-h5: 24px;
+  --text-h5--line-height: 1.3;
+  --text-h4: 28px;
+  --text-h4--line-height: 1.2;
+  --text-h3: 32px;
+  --text-h3--line-height: 1.15;
+  --text-h2: 40px;
+  --text-h2--line-height: 1.1;
+  --text-h1: 56px;
+  --text-h1--line-height: 1.05;
+
+  --text-display-sm: 60px;
+  --text-display-sm--line-height: 1.05;
+  --text-display-sm--letter-spacing: -0.015em;
+  --text-display: 76px;
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.015em;
+  --text-display-lg: 88px;
+  --text-display-lg--line-height: 0.92;
+  --text-display-lg--letter-spacing: -0.015em;
+
+  /* ──── WEIGHTS ──── */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* ──── LETTER SPACING ──── */
+  --tracking-tight: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-eyebrow: 0.14em;
+  --tracking-eyebrow-lg: 0.18em;
+  --tracking-eyebrow-xl: 0.28em;
+
+  /* ──── LINE HEIGHT ──── */
+  --leading-tight: 0.95;
+  --leading-snug: 1.05;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+  --leading-loose: 1.85;
+
+  /* ──── RADII ──── */
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* ──── SHADOWS ──── */
+  --shadow-card: 0 1px 2px rgba(10, 10, 10, 0.04);
+  --shadow-hover: 0 4px 24px rgba(10, 10, 10, 0.08);
+  --shadow-mega: 0 12px 32px rgba(10, 10, 10, 0.06);
+  --shadow-modal: 0 24px 60px rgba(10, 10, 10, 0.18);
+
+  /* ──── LAYOUT ──── */
+  --container-mabruk: 1320px;
+
+  /* ──── ASPECT RATIOS ──── */
+  --aspect-product: 4 / 5;
+  --aspect-editorial: 4 / 3;
+  --aspect-hero: 5 / 4;
+
+  /* ──── TRANSITIONS ──── */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ──── ANIMATIONS ──── */
+  --animate-fade-in: fade-in 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-up: slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slide-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ──── Base ──── */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    color: var(--color-ink);
+    background: var(--color-paper);
+    letter-spacing: 0.005em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  /* Mono com tabular nums (preços, SKUs, quantidades) */
+  .font-mono,
+  .mono {
+    font-feature-settings: 'tnum' 1, 'cv01' 1;
+  }
+
+  /* Inputs limpos */
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  input[type='search'],
+  input[type='password'],
+  select,
+  textarea {
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border-radius: 2px;
+    padding: 12px 14px;
+    font-size: 13px;
+    width: 100%;
+    outline: none;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--color-ink);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-ink-40);
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+}
+
+/* ──── Components helpers ──── */
+@layer components {
+  .container-mabruk {
+    max-width: var(--container-mabruk);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .eyebrow {
+    font-size: var(--text-eyebrow);
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--color-ink-60);
+    letter-spacing: 0.18em;
+  }
+  .eyebrow-hero {
+    font-size: var(--text-eyebrow);
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--color-ink-60);
+    letter-spacing: 0.28em;
+  }
+
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    transition: all 250ms var(--ease-out-soft);
+  }
+
+  .liftable {
+    transition: transform 250ms var(--ease-out-soft);
+  }
+  .liftable:hover {
+    transform: translateY(-2px);
+  }
+
+  .em-italic {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+}
