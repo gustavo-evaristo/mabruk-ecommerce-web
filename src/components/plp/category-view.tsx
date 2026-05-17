@@ -51,7 +51,7 @@ export function CategoryView({ products, total, totalPages, appliedFilters = [] 
   return (
     <>
       {/* Toolbar */}
-      <div className="-mt-12 mb-6 flex items-center justify-end gap-6 border-b border-line py-3.5">
+      <div className="mb-6 flex items-center justify-end gap-3 border-b border-line py-3.5 lg:-mt-12 lg:gap-6">
         <div className="flex items-center gap-2 text-eyebrow font-medium uppercase">
           <span className="text-ink-60">Ordenar</span>
           <select

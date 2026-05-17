@@ -50,11 +50,11 @@ export default function CartPage() {
   }
 
   return (
-    <Container className="py-12 pb-24">
-      <div className="mb-8 flex items-end justify-between">
+    <Container className="py-8 pb-16 lg:py-12 lg:pb-24">
+      <div className="mb-6 flex items-end justify-between lg:mb-8">
         <div>
           <div className="eyebrow">Etapa 1 de 3</div>
-          <h1 className="mt-2 font-display text-h1">Sua sacola</h1>
+          <h1 className="mt-2 font-display text-h2 lg:text-h1">Sua sacola</h1>
         </div>
         <div className="font-mono nums text-body-sm text-ink-60">
           {totalItems} {totalItems === 1 ? 'item' : 'itens'}
@@ -84,10 +84,11 @@ export default function CartPage() {
         </div>
       </div>
 
-      <div className="grid gap-16 lg:grid-cols-[1fr_440px]">
+      <div className="grid gap-10 lg:gap-16 lg:grid-cols-[1fr_440px]">
         {/* Itens */}
         <div>
-          <div className="grid grid-cols-[100px_1fr_140px_100px_40px] gap-4 border-b border-ink-20 pb-3 text-eyebrow-sm font-medium uppercase tracking-eyebrow text-ink-60">
+          {/* Header só em desktop */}
+          <div className="hidden grid-cols-[100px_1fr_140px_100px_40px] gap-4 border-b border-ink-20 pb-3 text-eyebrow-sm font-medium uppercase tracking-eyebrow text-ink-60 lg:grid">
             <span>Produto</span>
             <span />
             <span className="text-center">Quantidade</span>
@@ -98,9 +99,9 @@ export default function CartPage() {
           {items.map((item) => (
             <div
               key={item.itemId}
-              className="grid grid-cols-[100px_1fr_140px_100px_40px] items-center gap-4 border-b border-line py-7"
+              className="grid grid-cols-[80px_1fr_auto] items-start gap-4 border-b border-line py-5 lg:grid-cols-[100px_1fr_140px_100px_40px] lg:items-center lg:py-7"
             >
-              <div className="relative h-[120px] w-[100px] bg-cream">
+              <div className="relative h-[96px] w-20 bg-cream lg:h-[120px] lg:w-[100px]">
                 {item.imageUrl && (
                   <Image src={item.imageUrl} alt={item.productName} fill sizes="100px" className="object-cover" />
                 )}
@@ -108,7 +109,7 @@ export default function CartPage() {
               <div className="flex flex-col gap-1.5">
                 <Link
                   href={`/produto/${item.productSlug}` as Route}
-                  className="font-display text-h6 leading-tight hover:underline"
+                  className="font-display text-body-xl leading-tight hover:underline lg:text-h6"
                 >
                   {item.productName}
                 </Link>
@@ -116,6 +117,12 @@ export default function CartPage() {
                   {BANHO_LABEL[item.banho] ?? item.banho} · {item.size}
                 </div>
                 <div className="mt-1 font-mono nums text-body">{formatMoney(item.unitPriceCents)}</div>
+                <div className="mt-2 flex items-center gap-3 lg:hidden">
+                  <QtyStepper value={item.quantity} onChange={(q) => updateQuantity(item.itemId, q)} />
+                  <span className="font-mono nums text-body-md">
+                    {formatMoney(item.unitPriceCents * item.quantity)}
+                  </span>
+                </div>
                 <button
                   type="button"
                   className="mt-1 self-start text-body-xs text-ink-60 underline hover:text-ink"
@@ -123,17 +130,26 @@ export default function CartPage() {
                   Mover para favoritos
                 </button>
               </div>
-              <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => removeItem(item.itemId)}
+                aria-label="Remover"
+                className="text-ink-60 hover:text-ink lg:hidden"
+              >
+                <Icon name="close" size={16} />
+              </button>
+              {/* Colunas desktop apenas */}
+              <div className="hidden lg:flex lg:justify-center">
                 <QtyStepper value={item.quantity} onChange={(q) => updateQuantity(item.itemId, q)} />
               </div>
-              <div className="text-right font-mono nums text-body-xl">
+              <div className="hidden text-right font-mono nums text-body-xl lg:block">
                 {formatMoney(item.unitPriceCents * item.quantity)}
               </div>
               <button
                 type="button"
                 onClick={() => removeItem(item.itemId)}
                 aria-label="Remover"
-                className="justify-self-end text-ink-60 hover:text-ink"
+                className="hidden justify-self-end text-ink-60 hover:text-ink lg:block"
               >
                 <Icon name="close" size={16} />
               </button>
@@ -151,7 +167,7 @@ export default function CartPage() {
 
         {/* Summary */}
         <aside>
-          <div className="sticky top-24 flex flex-col gap-5 bg-cream p-8">
+          <div className="flex flex-col gap-5 bg-cream p-6 lg:sticky lg:top-24 lg:p-8">
             <h2 className="font-display text-h4">Resumo do pedido</h2>
 
             <div>

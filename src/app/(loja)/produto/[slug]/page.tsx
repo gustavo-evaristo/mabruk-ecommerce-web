@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: Props) {
         </nav>
       </Container>
 
-      <Container className="grid gap-10 py-8 pb-24 lg:grid-cols-[1fr_480px]">
+      <Container className="grid gap-8 py-6 pb-16 lg:grid-cols-[1fr_480px] lg:gap-10 lg:pb-24">
         <ProductGallery images={product.images} productName={product.name} />
         <ProductPdpForm product={product} />
       </Container>
@@ -50,7 +50,7 @@ export default async function ProductPage({ params }: Props) {
       <ProductTabs product={product} />
 
       {related.length > 0 && (
-        <section className="bg-cream py-20">
+        <section className="bg-cream py-14 lg:py-20">
           <Container>
             <SectionHead eyebrow="Combine com" title="Você pode gostar" align="left" />
             <ProductGrid products={related.slice(0, 4)} />

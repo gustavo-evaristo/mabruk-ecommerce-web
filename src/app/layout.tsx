@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: '%s · Mabruk Semijoias',
   },
   description:
-    'Mabruk Semijoias — coleção atemporal de anéis, brincos, colares e pulseiras. Banho ouro 18k e ródio com garantia.',
+    'Mabruk Semijoias — coleção atemporal de anéis, brincos, colares e pulseiras. Banho ouro 18k, prata 925 e aço inoxidável com garantia.',
 };
 
 export default function RootLayout({

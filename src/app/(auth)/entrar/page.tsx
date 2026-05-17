@@ -53,15 +53,6 @@ export default function LoginPage() {
         <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading} className="mt-3">
           {loading ? 'Entrando…' : 'Entrar'}
         </Button>
-
-        <div className="my-3 flex items-center gap-3 text-eyebrow font-medium uppercase tracking-eyebrow text-ink-40">
-          <span className="h-px flex-1 bg-line" />
-          ou
-          <span className="h-px flex-1 bg-line" />
-        </div>
-        <Button type="button" variant="secondary" size="lg" fullWidth>
-          Continuar com Google
-        </Button>
       </form>
 
       <div className="mt-10 flex justify-center gap-6 border-t border-line pt-6 text-body-xs text-ink-60">

@@ -39,8 +39,8 @@ export default async function CollectionPage({ params }: Props) {
     <>
       {/* HERO */}
       <section className={`${accentBg} ${inkClass}`}>
-        <div className="grid min-h-[620px] grid-cols-1 md:grid-cols-[1.05fr_1fr]">
-          <div className="relative min-h-[620px] overflow-hidden">
+        <div className="grid grid-cols-1 md:min-h-[620px] md:grid-cols-[1.05fr_1fr]">
+          <div className="relative min-h-[300px] overflow-hidden md:min-h-[620px]">
             <Image
               src={data.collection.coverImageUrl ?? 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1400&q=80'}
               alt={`Coleção ${data.collection.name}`}
@@ -52,23 +52,23 @@ export default async function CollectionPage({ params }: Props) {
             {isDark && (
               <div className="absolute inset-0 bg-gradient-to-r from-ink/40 to-transparent" />
             )}
-            <div className="absolute top-8 left-8 bg-paper/95 px-3.5 py-1.5 text-eyebrow-sm font-medium uppercase tracking-eyebrow text-ink">
+            <div className="absolute top-4 left-4 bg-paper/95 px-3.5 py-1.5 text-eyebrow-sm font-medium uppercase tracking-eyebrow text-ink md:top-8 md:left-8">
               Coleção {data.collection.name}
             </div>
           </div>
-          <div className="flex flex-col justify-center gap-7 px-10 py-24 md:px-20">
+          <div className="flex flex-col justify-center gap-5 px-6 py-14 md:gap-7 md:px-20 md:py-24">
             <div>
               <div className={`text-eyebrow font-medium uppercase tracking-eyebrow-xl ${subClass}`}>
                 Coleção
               </div>
               <h1
-                className={`mt-3 font-display text-display-lg leading-tight tracking-tight ${inkClass}`}
+                className={`mt-3 font-display text-[44px] leading-[1.05] tracking-tight sm:text-[60px] md:text-display-lg md:leading-tight ${inkClass}`}
               >
                 {data.collection.name}
               </h1>
             </div>
             {data.collection.description && (
-              <p className={`max-w-[480px] text-body-lg leading-relaxed ${subClass}`}>
+              <p className={`max-w-[480px] text-body-md leading-relaxed md:text-body-lg ${subClass}`}>
                 {data.collection.description}
               </p>
             )}
@@ -80,18 +80,18 @@ export default async function CollectionPage({ params }: Props) {
               </Link>
             </div>
             <div
-              className={`mt-6 flex gap-14 border-t pt-7 ${isDark ? 'border-paper/15' : 'border-ink/10'}`}
+              className={`mt-4 flex gap-8 border-t pt-6 md:mt-6 md:gap-14 md:pt-7 ${isDark ? 'border-paper/15' : 'border-ink/10'}`}
             >
               <div>
-                <div className={`font-display text-h3 ${inkClass}`}>{data.products.total}</div>
+                <div className={`font-display text-h4 md:text-h3 ${inkClass}`}>{data.products.total}</div>
                 <div className={`eyebrow mt-1.5 ${subClass}`}>Peças exclusivas</div>
               </div>
               <div>
-                <div className={`font-display text-h3 ${inkClass}`}>18k</div>
+                <div className={`font-display text-h4 md:text-h3 ${inkClass}`}>18k</div>
                 <div className={`eyebrow mt-1.5 ${subClass}`}>Banho de ouro</div>
               </div>
               <div>
-                <div className={`font-display text-h3 ${inkClass}`}>Maio 26</div>
+                <div className={`font-display text-h4 md:text-h3 ${inkClass}`}>Maio 26</div>
                 <div className={`eyebrow mt-1.5 ${subClass}`}>Lançamento</div>
               </div>
             </div>
@@ -101,9 +101,9 @@ export default async function CollectionPage({ params }: Props) {
 
       {/* Switcher */}
       <section className="border-b border-line bg-paper">
-        <Container className="flex items-center gap-4 py-6 text-eyebrow font-medium uppercase tracking-eyebrow">
+        <Container className="flex flex-wrap items-center gap-x-4 gap-y-2 py-5 text-eyebrow font-medium uppercase tracking-eyebrow lg:py-6">
           <span className="text-ink-60">Outras coleções:</span>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
             {others.map((c) => (
               <Link
                 key={c.id}
@@ -115,14 +115,14 @@ export default async function CollectionPage({ params }: Props) {
               </Link>
             ))}
           </div>
-          <span className="ml-auto font-mono nums tracking-normal text-ink-60 normal-case">
+          <span className="font-mono nums tracking-normal text-ink-60 normal-case sm:ml-auto">
             {data.products.total} peças
           </span>
         </Container>
       </section>
 
       {/* Grid */}
-      <section id="grid" className="bg-paper py-24">
+      <section id="grid" className="bg-paper py-14 lg:py-24">
         <Container>
           <SectionHead
             eyebrow="As peças"
@@ -135,7 +135,7 @@ export default async function CollectionPage({ params }: Props) {
 
       {/* Outras coleções */}
       {others.length > 0 && (
-        <section className="bg-cream py-20">
+        <section className="bg-cream py-14 lg:py-20">
           <Container>
             <SectionHead eyebrow="Continue explorando" title="Outras coleções" />
             <div className="grid gap-6 md:grid-cols-2">

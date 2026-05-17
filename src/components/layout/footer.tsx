@@ -45,12 +45,12 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 export function Footer() {
   return (
     <footer className="border-t border-line bg-paper">
-      <Container className="py-20">
+      <Container className="py-12 lg:py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
             <Logo size={28} />
             <p className="mt-6 max-w-xs text-body-sm leading-relaxed text-ink-60">
-              Joias atemporais para o dia a dia. Banho ouro 18k e ródio com garantia.
+              Joias atemporais para o dia a dia. Banho ouro 18k, prata 925 e aço inoxidável com garantia.
             </p>
             <Link
               href="https://www.instagram.com"

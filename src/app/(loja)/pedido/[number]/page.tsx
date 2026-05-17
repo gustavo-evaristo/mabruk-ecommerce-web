@@ -25,14 +25,14 @@ export default async function PedidoConfirmacaoPage({ params, searchParams }: Pr
 
   return (
     <>
-      <section className="bg-cream py-20 text-center">
+      <section className="bg-cream py-14 text-center lg:py-20">
         <Container className="!max-w-[720px]">
           <div className="flex flex-col items-center gap-5">
-            <div className="grid size-20 place-items-center rounded-full bg-ink text-cream">
-              <Icon name="check" size={32} stroke={1.5} />
+            <div className="grid size-16 place-items-center rounded-full bg-ink text-cream lg:size-20">
+              <Icon name="check" size={28} stroke={1.5} className="lg:!size-8" />
             </div>
             <div className="eyebrow-hero">Pedido confirmado</div>
-            <h1 className="font-display text-h1">
+            <h1 className="font-display text-h2 lg:text-h1">
               Obrigada, <span className="em-italic">Gustavo</span>
             </h1>
             <p className="max-w-lg text-body-lg leading-relaxed text-ink-60">
@@ -47,7 +47,7 @@ export default async function PedidoConfirmacaoPage({ params, searchParams }: Pr
         </Container>
       </section>
 
-      <Container className="grid gap-16 py-20 lg:grid-cols-[1fr_380px]">
+      <Container className="grid gap-10 py-14 lg:gap-16 lg:grid-cols-[1fr_380px] lg:py-20">
         {/* Timeline + Address */}
         <div className="flex flex-col gap-12">
           {isPix && (

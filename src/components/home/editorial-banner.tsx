@@ -75,7 +75,7 @@ export function EditorialBanner() {
         {/* Pane grande à esquerda */}
         <Link
           href={'/colecao/oasis' as Route}
-          className="relative block min-h-[520px] overflow-hidden border-b border-line md:border-b-0"
+          className="relative block min-h-[340px] overflow-hidden border-b border-line md:min-h-[520px] md:border-b-0"
         >
           <Image
             src="https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1400&q=80"
@@ -85,9 +85,9 @@ export function EditorialBanner() {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent" />
-          <div className="absolute right-10 bottom-10 left-10 text-paper">
+          <div className="absolute right-6 bottom-6 left-6 text-paper md:right-10 md:bottom-10 md:left-10">
             <div className="eyebrow-hero !text-paper/80">Editorial · Maio</div>
-            <h3 className="mt-3 font-display text-[44px] leading-none">
+            <h3 className="mt-3 font-display text-[32px] leading-none md:text-[44px]">
               <span className="em-italic">Manhãs</span>
               <br />
               douradas

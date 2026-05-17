@@ -144,16 +144,16 @@ export default function RevendedorasPage() {
       {/* HERO */}
       <section className="border-b border-line bg-cream">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-stretch md:grid-cols-[1fr_1.05fr]">
-          <div className="flex flex-col justify-center gap-7 px-10 py-24 md:px-20">
+          <div className="flex flex-col justify-center gap-5 px-6 py-12 md:gap-7 md:px-20 md:py-24">
             <div className="eyebrow-hero">Programa de consignação</div>
-            <h1 className="font-display text-display-lg leading-tight tracking-tight">
+            <h1 className="font-display text-[44px] leading-[1.05] tracking-tight sm:text-[60px] md:text-display-lg md:leading-tight">
               Seja uma
               <br />
               <span className="em-italic">revendedora</span>
               <br />
               Mabruk
             </h1>
-            <p className="max-w-[480px] text-body-xl leading-relaxed text-ink-60">
+            <p className="max-w-[480px] text-body-md leading-relaxed text-ink-60 md:text-body-xl">
               Construa sua própria renda vendendo as semijoias que já são desejo de tantas
               mulheres. Sem investimento inicial, sem estoque parado.
             </p>
@@ -175,17 +175,17 @@ export default function RevendedorasPage() {
                 Como funciona
               </Button>
             </div>
-            <div className="mt-6 flex gap-6 border-t border-ink/10 pt-8 md:gap-12">
+            <div className="mt-4 flex gap-5 border-t border-ink/10 pt-6 md:mt-6 md:gap-12 md:pt-8">
               {STATS.map((s) => (
                 <div key={s.label} className="min-w-0 flex-1">
-                  <div className="font-display text-h3 leading-none">{s.value}</div>
-                  <div className="eyebrow mt-2 whitespace-nowrap">{s.label}</div>
+                  <div className="font-display text-h4 leading-none md:text-h3">{s.value}</div>
+                  <div className="eyebrow mt-2 md:whitespace-nowrap">{s.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="relative min-h-[480px] overflow-hidden md:min-h-[640px]">
+          <div className="relative min-h-[320px] overflow-hidden md:min-h-[640px]">
             <Image
               src={HERO_IMAGE}
               alt="Modelo usando peças Mabruk"
@@ -194,7 +194,7 @@ export default function RevendedorasPage() {
               sizes="(min-width: 768px) 50vw, 100vw"
               className="object-cover"
             />
-            <div className="absolute top-8 right-8 max-w-[260px] bg-paper/95 px-4 py-3 backdrop-blur-sm">
+            <div className="absolute top-4 right-4 max-w-[260px] bg-paper/95 px-3.5 py-2.5 backdrop-blur-sm md:top-8 md:right-8 md:px-4 md:py-3">
               <div className="eyebrow !text-ink-60">Enviamos para</div>
               <div className="mt-1 font-display text-h6">todo o Brasil</div>
             </div>
@@ -203,7 +203,7 @@ export default function RevendedorasPage() {
       </section>
 
       {/* BENEFITS */}
-      <section className="bg-paper py-24">
+      <section className="bg-paper py-14 lg:py-24">
         <Container>
           <SectionHead
             eyebrow="Por que Mabruk"
@@ -224,18 +224,18 @@ export default function RevendedorasPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="como-funciona" className="bg-ink py-24 text-paper">
+      <section id="como-funciona" className="bg-ink py-14 text-paper lg:py-24">
         <Container>
-          <div className="mb-16 grid items-start gap-20 md:grid-cols-[1fr_1.5fr]">
+          <div className="mb-10 grid items-start gap-8 md:mb-16 md:gap-20 md:grid-cols-[1fr_1.5fr]">
             <div>
               <div className="eyebrow-hero !text-paper/60">Como funciona</div>
-              <h2 className="mt-4 font-display text-h1 leading-tight text-paper">
+              <h2 className="mt-4 font-display text-h2 leading-tight text-paper md:text-h1">
                 Quatro passos
                 <br />
                 <span className="em-italic !text-paper">simples</span>
               </h2>
             </div>
-            <p className="pt-3 text-body-lg leading-loose text-paper/75">
+            <p className="pt-3 text-body-md leading-loose text-paper/75 md:text-body-lg">
               Do cadastro à primeira venda em menos de 10 dias. Nosso modelo de consignação foi
               desenhado para reduzir riscos e dar autonomia para você crescer no seu ritmo — em
               casa, no salão de beleza, em eventos ou online pelas redes sociais.
@@ -255,7 +255,7 @@ export default function RevendedorasPage() {
       </section>
 
       {/* PROFILES */}
-      <section className="bg-cream py-24">
+      <section className="bg-cream py-14 lg:py-24">
         <Container>
           <SectionHead
             eyebrow="Quem revende Mabruk"
@@ -289,7 +289,7 @@ export default function RevendedorasPage() {
       </section>
 
       {/* FAQ */}
-      <section className="bg-paper py-24">
+      <section className="bg-paper py-14 lg:py-24">
         <Container className="!max-w-[960px]">
           <div className="mb-14 text-center">
             <div className="eyebrow-hero">Perguntas frequentes</div>
@@ -321,10 +321,10 @@ export default function RevendedorasPage() {
       </section>
 
       {/* FINAL CTA */}
-      <section id="reseller-form" className="bg-cream py-32">
+      <section id="reseller-form" className="bg-cream py-16 lg:py-32">
         <Container className="!max-w-[880px] text-center">
           <div className="eyebrow-hero">Próximo passo</div>
-          <h2 className="mt-4 font-display text-display-sm leading-tight">
+          <h2 className="mt-4 font-display text-h2 leading-tight lg:text-display-sm">
             Pronta para <span className="em-italic">começar?</span>
           </h2>
           <p className="mx-auto mt-6 max-w-[580px] text-body-xl leading-relaxed text-ink-60">

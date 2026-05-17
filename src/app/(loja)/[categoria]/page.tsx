@@ -5,6 +5,7 @@ import { listTags } from '@/lib/api/endpoints/tags';
 import { listProducts } from '@/lib/api/endpoints/products';
 import { Container } from '@/components/ui/container';
 import { FilterSidebar } from '@/components/plp/filter-sidebar';
+import { FilterDrawer } from '@/components/plp/filter-drawer';
 import { CategoryView } from '@/components/plp/category-view';
 
 interface Props {
@@ -31,13 +32,26 @@ export default async function CategoryPage({ params }: Props) {
   if (!cat) notFound();
 
   return (
-    <Container className="grid gap-12 py-12 lg:grid-cols-[240px_1fr]">
-      <FilterSidebar
-        categories={categories}
-        collections={collections}
-        tags={tags}
-        activeCategorySlug={cat.slug}
-      />
+    <Container className="grid gap-6 py-8 lg:grid-cols-[240px_1fr] lg:gap-12 lg:py-12">
+      {/* Mobile: drawer trigger */}
+      <div className="lg:hidden">
+        <FilterDrawer
+          categories={categories}
+          collections={collections}
+          tags={tags}
+          activeCategorySlug={cat.slug}
+        />
+      </div>
+
+      {/* Desktop: sidebar fixa */}
+      <div className="hidden lg:block">
+        <FilterSidebar
+          categories={categories}
+          collections={collections}
+          tags={tags}
+          activeCategorySlug={cat.slug}
+        />
+      </div>
 
       <CategoryView
         products={result.items}

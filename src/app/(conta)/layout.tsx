@@ -11,7 +11,6 @@ const USER = {
   email: 'gustavo@email.com.br',
   initials: 'GE',
   memberSince: 'janeiro de 2025',
-  tier: 'Insider',
 };
 
 export default function ContaLayout({ children }: { children: React.ReactNode }) {
@@ -21,32 +20,29 @@ export default function ContaLayout({ children }: { children: React.ReactNode })
 
       {/* Saudação */}
       <section className="border-b border-line bg-cream">
-        <Container className="flex items-center gap-8 py-12">
-          <div className="grid size-22 place-items-center rounded-full bg-ink font-display text-h4 text-paper">
+        <Container className="flex flex-col gap-5 py-8 sm:flex-row sm:items-center sm:gap-8 lg:py-12">
+          <div className="grid size-16 shrink-0 place-items-center rounded-full bg-ink font-display text-h5 text-paper lg:size-22 lg:text-h4">
             {USER.initials}
           </div>
           <div className="flex-1">
             <div className="eyebrow">Olá,</div>
-            <h1 className="mt-1.5 font-display text-h2 leading-none">{USER.firstName}</h1>
-            <div className="mt-3 flex flex-wrap items-center gap-4 text-body-xs text-ink-60">
+            <h1 className="mt-1.5 font-display text-h3 leading-none lg:text-h2">{USER.firstName}</h1>
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-body-xs text-ink-60">
               <span>{USER.email}</span>
-              <span>·</span>
+              <span className="hidden sm:inline">·</span>
               <span>Cliente desde {USER.memberSince}</span>
-              <span className="bg-champagne px-2.5 py-1 text-eyebrow-sm font-semibold uppercase tracking-eyebrow text-ink">
-                {USER.tier}
-              </span>
             </div>
           </div>
           <Link
             href="/"
-            className="border border-line px-4 py-2.5 text-eyebrow font-medium uppercase tracking-eyebrow"
+            className="self-start border border-line px-4 py-2.5 text-eyebrow font-medium uppercase tracking-eyebrow sm:self-auto"
           >
             Sair da conta
           </Link>
         </Container>
       </section>
 
-      <Container className="grid gap-12 py-12 pb-24 lg:grid-cols-[260px_1fr]">
+      <Container className="grid gap-8 py-8 pb-16 lg:grid-cols-[260px_1fr] lg:gap-12 lg:py-12 lg:pb-24">
         <AccountSidebar />
         <div>{children}</div>
       </Container>

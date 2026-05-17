@@ -26,16 +26,16 @@ interface Props {
 
 export function CategoryStrip({ categories }: Props) {
   return (
-    <section className="border-b border-line bg-paper py-16">
+    <section className="border-b border-line bg-paper py-10 lg:py-16">
       <Container>
-        <div className="flex flex-wrap items-start justify-center gap-x-8 gap-y-10 md:gap-x-12">
+        <div className="flex flex-wrap items-start justify-center gap-x-5 gap-y-6 md:gap-x-12 md:gap-y-10">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/${cat.slug}` as Route}
-              className="liftable flex flex-col items-center gap-3.5"
+              className="liftable flex flex-col items-center gap-3"
             >
-              <div className="relative size-28 overflow-hidden rounded-full bg-cream">
+              <div className="relative size-20 overflow-hidden rounded-full bg-cream md:size-28">
                 <Image
                   src={CATEGORY_IMAGES[cat.slug] ?? CATEGORY_IMAGES.aneis}
                   alt={cat.name}
@@ -44,7 +44,7 @@ export function CategoryStrip({ categories }: Props) {
                   className="object-cover"
                 />
               </div>
-              <span className="text-eyebrow font-medium uppercase tracking-eyebrow-lg">
+              <span className="text-eyebrow-sm font-medium uppercase tracking-eyebrow md:text-eyebrow md:tracking-eyebrow-lg">
                 {cat.name}
               </span>
             </Link>

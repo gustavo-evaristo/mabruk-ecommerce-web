@@ -117,9 +117,16 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
 }
 
 /**
- * Quando `USE_MOCK=true`, os endpoints retornam dados de `lib/mock/*.ts`
- * sem fazer requisição à API. Útil enquanto telas estão maturando.
+ * Default: usa mocks. Para chamar a API real, defina explicitamente
+ * `USE_MOCK=false` (server) ou `NEXT_PUBLIC_USE_MOCK=false` (client).
+ *
+ * Isso é um default conservador: a API real ainda não está deployada em
+ * produção, então o front sobe usando mocks. Quando a API estiver no ar,
+ * vire as flags pra "false" no painel de env vars do Vercel.
  */
 export function useMock(): boolean {
-  return process.env.USE_MOCK === 'true' || process.env.NEXT_PUBLIC_USE_MOCK === 'true';
+  const server = process.env.USE_MOCK;
+  const client = process.env.NEXT_PUBLIC_USE_MOCK;
+  if (server === 'false' || client === 'false') return false;
+  return true;
 }

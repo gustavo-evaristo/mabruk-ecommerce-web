@@ -27,7 +27,7 @@ export default async function HomePage() {
       <CategoryStrip categories={categories} />
       <EditorialBanner />
 
-      <section className="bg-paper py-24">
+      <section className="bg-paper py-14 lg:py-24">
         <Container>
           <SectionHead
             eyebrow="Recém-chegadas"
@@ -41,7 +41,7 @@ export default async function HomePage() {
       <CollectionBlock />
       <FullBleedEditorial />
 
-      <section className="bg-paper py-24">
+      <section className="bg-paper py-14 lg:py-24">
         <Container>
           <SectionHead
             eyebrow="As mais amadas"

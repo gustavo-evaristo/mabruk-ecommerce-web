@@ -14,11 +14,11 @@ export function Newsletter() {
   }
 
   return (
-    <section className="bg-cream py-24">
+    <section className="bg-cream py-16 lg:py-24">
       <Container className="!max-w-[640px] text-center">
         <div className="flex flex-col items-center gap-5">
           <div className="eyebrow-hero">Mabruk Insider</div>
-          <h2 className="font-display text-h2">Receba acesso antecipado</h2>
+          <h2 className="font-display text-h3 lg:text-h2">Receba acesso antecipado</h2>
           <p className="text-body-md leading-relaxed text-ink-60">
             Novas coleções, edições limitadas e ofertas exclusivas. Comece com 10% off na
             primeira compra.
@@ -28,16 +28,19 @@ export function Newsletter() {
               Obrigada! Confira sua caixa de entrada para confirmar a inscrição.
             </p>
           ) : (
-            <form onSubmit={handleSubmit} className="mt-3 flex w-full max-w-[460px]">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-3 flex w-full max-w-[460px] flex-col gap-2 sm:flex-row sm:gap-0"
+            >
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="seu@email.com"
-                className="!flex-1 !border-r-0"
+                className="!flex-1 sm:!border-r-0"
               />
-              <Button type="submit" variant="primary" className="!rounded-none !px-7">
+              <Button type="submit" variant="primary" className="!px-7 sm:!rounded-none">
                 Inscrever
               </Button>
             </form>

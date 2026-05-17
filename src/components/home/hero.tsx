@@ -12,19 +12,19 @@ const HERO_INSET =
 export function Hero() {
   return (
     <section className="relative bg-cream">
-      <Container className="grid min-h-[680px] items-center gap-16 lg:grid-cols-[1fr_1.05fr]">
-        <div className="flex flex-col gap-7 py-16">
+      <Container className="grid items-center gap-10 py-10 lg:min-h-[680px] lg:gap-16 lg:py-0 lg:grid-cols-[1fr_1.05fr]">
+        <div className="flex flex-col gap-5 lg:gap-7 lg:py-16">
           <div className="eyebrow-hero">Coleção Outono · Inverno</div>
-          <h1 className="text-display-lg leading-tight tracking-tight">
+          <h1 className="text-[44px] leading-[1] tracking-tight sm:text-[60px] lg:text-display-lg lg:leading-tight">
             O brilho que
             <br />
             <span className="em-italic">permanece</span>
           </h1>
-          <p className="max-w-[460px] text-body-xl leading-relaxed text-ink-60">
-            Semijoias com banho de ouro 18k e ródio, desenhadas para acompanhar as histórias
+          <p className="max-w-[460px] text-body-md leading-relaxed text-ink-60 lg:text-body-xl">
+            Semijoias com banho de ouro 18k, prata 925 e aço inoxidável, desenhadas para acompanhar as histórias
             que importam.
           </p>
-          <div className="mt-2 flex gap-3">
+          <div className="mt-2 flex flex-wrap gap-3">
             <Link href="/aneis">
               <Button variant="primary" size="lg">
                 Comprar agora
@@ -40,7 +40,7 @@ export function Hero() {
               </Button>
             </Link>
           </div>
-          <div className="mt-8 flex gap-8 border-t border-ink/10 pt-8">
+          <div className="mt-4 flex flex-wrap gap-6 border-t border-ink/10 pt-6 lg:mt-8 lg:gap-8 lg:pt-8">
             {[
               { label: 'Banho de', value: 'Ouro 18k' },
               { label: 'Garantia', value: '12 meses' },
@@ -48,13 +48,13 @@ export function Hero() {
             ].map((s) => (
               <div key={s.label} className="flex flex-col gap-1">
                 <div className="eyebrow !text-ink-60">{s.label}</div>
-                <div className="font-display text-lead">{s.value}</div>
+                <div className="font-display text-body-xl lg:text-lead">{s.value}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="relative h-[620px]">
+        <div className="relative h-[400px] sm:h-[500px] lg:h-[620px]">
           <div className="absolute top-0 left-0 h-full w-[72%] overflow-hidden">
             <Image
               src={HERO_IMAGE}
@@ -64,15 +64,15 @@ export function Hero() {
               sizes="(min-width: 1280px) 600px, 50vw"
               className="object-cover"
             />
-            <div className="absolute bottom-6 left-6 bg-paper/95 px-5 py-3 backdrop-blur-sm">
+            <div className="absolute bottom-3 left-3 bg-paper/95 px-3 py-2 backdrop-blur-sm lg:bottom-6 lg:left-6 lg:px-5 lg:py-3">
               <div className="eyebrow !text-ink-60">Em destaque</div>
-              <div className="mt-1 font-display text-h6">Colar Pingente Lumière</div>
-              <div className="font-mono nums text-body-sm text-ink-80">
+              <div className="mt-1 font-display text-body-xl lg:text-h6">Colar Pingente Lumière</div>
+              <div className="font-mono nums text-body-xs text-ink-80 lg:text-body-sm">
                 R$ 289,00 · até 6x sem juros
               </div>
             </div>
           </div>
-          <div className="absolute right-0 bottom-0 h-[46%] w-[40%] overflow-hidden shadow-[-20px_-20px_0_var(--color-cream)]">
+          <div className="absolute right-0 bottom-0 h-[46%] w-[40%] overflow-hidden shadow-[-12px_-12px_0_var(--color-cream)] lg:shadow-[-20px_-20px_0_var(--color-cream)]">
             <Image
               src={HERO_INSET}
               alt="Detalhe de joia em fundo cream"

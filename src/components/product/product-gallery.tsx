@@ -17,16 +17,16 @@ export function ProductGallery({ images, productName }: Props) {
   const current = list[active] ?? list[0];
 
   return (
-    <div className="flex gap-4">
-      {/* Thumbs */}
-      <div className="flex shrink-0 flex-col gap-3">
+    <div className="flex flex-col gap-4 lg:flex-row">
+      {/* Thumbs — coluna vertical em desktop, scroll horizontal em mobile */}
+      <div className="order-2 flex shrink-0 gap-2 overflow-x-auto lg:order-1 lg:flex-col lg:gap-3 lg:overflow-visible">
         {list.map((img, i) => (
           <button
             key={img.id}
             type="button"
             onClick={() => setActive(i)}
             className={cn(
-              'relative h-[100px] w-20 overflow-hidden border bg-cream',
+              'relative h-[80px] w-16 shrink-0 overflow-hidden border bg-cream lg:h-[100px] lg:w-20',
               i === active ? 'border-ink' : 'border-line',
             )}
           >
@@ -42,7 +42,7 @@ export function ProductGallery({ images, productName }: Props) {
       </div>
 
       {/* Main image */}
-      <div className="flex-1">
+      <div className="order-1 flex-1 lg:order-2">
         <div className="relative aspect-[4/5] overflow-hidden bg-cream">
           {current.url ? (
             <Image
@@ -60,8 +60,8 @@ export function ProductGallery({ images, productName }: Props) {
           )}
         </div>
         <div className="mt-4 flex items-center justify-between text-body-xs text-ink-60">
-          <span>Passe o mouse para aplicar zoom</span>
-          <span className="font-mono nums">
+          <span className="hidden sm:inline">Passe o mouse para aplicar zoom</span>
+          <span className="font-mono nums ml-auto">
             {active + 1} / {list.length}
           </span>
         </div>

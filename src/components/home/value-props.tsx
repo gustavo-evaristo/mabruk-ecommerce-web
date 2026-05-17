@@ -10,9 +10,9 @@ const PROPS: { icon: IconName; title: string; desc: string }[] = [
 
 export function ValueProps() {
   return (
-    <section className="bg-ink py-16 text-paper">
+    <section className="bg-ink py-12 text-paper lg:py-16">
       <Container>
-        <div className="grid grid-cols-2 gap-12 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 md:gap-12 md:grid-cols-4">
           {PROPS.map((p) => (
             <div key={p.title} className="flex flex-col gap-3">
               <Icon name={p.icon} size={28} stroke={1} className="text-cream" />

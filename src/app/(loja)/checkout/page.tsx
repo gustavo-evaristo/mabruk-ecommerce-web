@@ -42,19 +42,19 @@ export default function CheckoutPage() {
   }
 
   return (
-    <Container className="py-10 pb-24">
+    <Container className="py-8 pb-16 lg:py-10 lg:pb-24">
         {/* Stepper */}
-        <div className="mb-12 flex items-center gap-6">
+        <div className="mb-8 flex items-center gap-3 overflow-x-auto lg:mb-12 lg:gap-6">
           {(['Identificação', 'Endereço & frete', 'Pagamento'] as const).map((label, i) => {
             const num = (i + 1) as Step;
             const active = step === num;
             const done = step > num;
             return (
-              <div key={label} className="flex items-center gap-6">
+              <div key={label} className="flex shrink-0 items-center gap-3 lg:gap-6">
                 <button
                   type="button"
                   onClick={() => (done ? setStep(num) : null)}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-2 lg:gap-3"
                   disabled={!done && !active}
                 >
                   <div
@@ -73,6 +73,7 @@ export default function CheckoutPage() {
                     className={cn(
                       'text-eyebrow font-medium uppercase tracking-eyebrow',
                       active ? 'text-ink' : done ? 'text-ink-80' : 'text-ink-40',
+                      !active && 'hidden sm:inline',
                     )}
                   >
                     {label}
@@ -80,7 +81,7 @@ export default function CheckoutPage() {
                 </button>
                 {i < 2 && (
                   <span
-                    className={cn('h-px w-14', step > num ? 'bg-ink' : 'bg-ink-20')}
+                    className={cn('h-px w-6 lg:w-14', step > num ? 'bg-ink' : 'bg-ink-20')}
                   />
                 )}
               </div>
@@ -88,12 +89,12 @@ export default function CheckoutPage() {
           })}
         </div>
 
-        <div className="grid gap-16 lg:grid-cols-[1fr_440px]">
+        <div className="grid gap-10 lg:gap-16 lg:grid-cols-[1fr_440px]">
           {/* Main column */}
           <div className="flex flex-col gap-8">
             {step === 1 && (
               <section>
-                <h2 className="font-display text-h2">Identificação</h2>
+                <h2 className="font-display text-h3 lg:text-h2">Identificação</h2>
                 <p className="mt-2 text-body-sm text-ink-60">
                   Já tem conta Mabruk?{' '}
                   <a className="text-ink underline" href="/entrar">
@@ -142,7 +143,7 @@ export default function CheckoutPage() {
 
             {step === 2 && (
               <section>
-                <h2 className="font-display text-h2">Endereço de entrega</h2>
+                <h2 className="font-display text-h3 lg:text-h2">Endereço de entrega</h2>
                 <div className="mt-8 flex flex-col gap-4">
                   <div className="flex items-end gap-4">
                     <Field label="CEP" className="w-44">
@@ -232,7 +233,7 @@ export default function CheckoutPage() {
 
             {step === 3 && (
               <section>
-                <h2 className="font-display text-h2">Pagamento</h2>
+                <h2 className="font-display text-h3 lg:text-h2">Pagamento</h2>
                 <div className="mt-8 flex flex-col gap-4">
                   {/* Cartão */}
                   <div className={cn('border', payment === 'credit' ? 'border-ink' : 'border-line')}>
@@ -335,7 +336,7 @@ export default function CheckoutPage() {
 
           {/* Summary */}
           <aside>
-            <div className="sticky top-6 flex flex-col gap-4 bg-cream p-8">
+            <div className="flex flex-col gap-4 bg-cream p-6 lg:sticky lg:top-6 lg:p-8">
               <h3 className="font-display text-h5">Seu pedido</h3>
               <div className="flex max-h-[280px] flex-col gap-3.5 overflow-y-auto pr-1">
                 {items.map((item) => (

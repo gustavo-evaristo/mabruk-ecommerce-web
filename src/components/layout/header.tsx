@@ -6,6 +6,7 @@ import Link from 'next/link';
 import type { Route } from 'next';
 import { Logo } from './logo';
 import { TopBar } from './top-bar';
+import { MobileMenu } from './mobile-menu';
 import { Container } from '@/components/ui/container';
 import { Icon } from '@/components/ui/icon';
 import { useCart } from '@/lib/providers/cart-provider';
@@ -163,6 +164,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export function Header() {
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems, open: openCart } = useCart();
 
   const active = NAV_ITEMS.find((i) => i.key === openKey);
@@ -176,34 +178,41 @@ export function Header() {
 
       {/* Linha 1 — utilities + logo */}
       <div className="border-b border-line">
-        <Container className="grid h-[100px] grid-cols-[1fr_auto_1fr] items-center gap-8">
-          {/* Esquerda */}
-          <div className="flex items-center gap-7 text-eyebrow font-medium uppercase tracking-eyebrow text-ink-60">
+        <Container className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-3 lg:h-[100px] lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+          {/* Mobile hamburger / Desktop placeholder */}
+          <div className="flex items-center lg:hidden">
             <button
               type="button"
-              className="inline-flex items-center gap-2 hover:text-ink"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Abrir menu"
+              className="cursor-pointer p-1 text-ink"
             >
-              <Icon name="truck" size={14} stroke={1.2} />
-              Rastrear pedido
+              <Icon name="menu" size={24} />
             </button>
           </div>
+          <div className="hidden lg:block" />
 
           {/* Logo centralizado */}
-          <Logo size={48} />
+          <div className="flex justify-center">
+            <Logo size={32} className="lg:hidden" />
+            <Logo size={48} className="hidden lg:inline-flex" />
+          </div>
 
           {/* Direita */}
-          <div className="flex items-center justify-end gap-7">
+          <div className="flex items-center justify-end gap-3 lg:gap-7">
             <Link
               href={'/entrar' as Route}
+              aria-label="Entrar"
               className="inline-flex items-center gap-2.5 text-ink hover:text-ink-60"
             >
               <Icon name="user" size={22} stroke={1.2} />
-              <span className="text-eyebrow font-medium uppercase tracking-eyebrow">
+              <span className="hidden text-eyebrow font-medium uppercase tracking-eyebrow lg:inline">
                 Entrar
               </span>
             </Link>
             <Link
               href={'/conta/favoritos' as Route}
+              aria-label="Favoritos"
               className="inline-flex items-center gap-2.5 text-ink hover:text-ink-60"
             >
               <span className="relative inline-flex">
@@ -212,14 +221,14 @@ export function Header() {
                   2
                 </span>
               </span>
-              <span className="text-eyebrow font-medium uppercase tracking-eyebrow">
+              <span className="hidden text-eyebrow font-medium uppercase tracking-eyebrow lg:inline">
                 Favoritos
               </span>
             </Link>
             <button
               type="button"
               onClick={openCart}
-              className="inline-flex items-center gap-2.5 text-ink hover:text-ink-60"
+              className="inline-flex cursor-pointer items-center gap-2.5 text-ink hover:text-ink-60"
               aria-label={`Sacola${totalItems > 0 ? ` com ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}` : ''}`}
             >
               <span className="relative inline-flex">
@@ -230,7 +239,7 @@ export function Header() {
                   </span>
                 )}
               </span>
-              <span className="text-eyebrow font-medium uppercase tracking-eyebrow">
+              <span className="hidden text-eyebrow font-medium uppercase tracking-eyebrow lg:inline">
                 Sacola
               </span>
             </button>
@@ -238,8 +247,8 @@ export function Header() {
         </Container>
       </div>
 
-      {/* Linha 2 — Nav */}
-      <div className="border-b border-line">
+      {/* Linha 2 — Nav (esconde no mobile, usa hamburger) */}
+      <div className="hidden border-b border-line lg:block">
         <Container className="flex h-[54px] items-center justify-center gap-10">
           {NAV_ITEMS.map((item) => {
             const isOpen = openKey === item.key;
@@ -279,8 +288,15 @@ export function Header() {
         </Container>
       </div>
 
-      {/* Mega-menu panel */}
-      {active?.mega && <MegaPanel mega={active.mega} />}
+      {/* Mega-menu panel (apenas desktop) */}
+      {active?.mega && (
+        <div className="hidden lg:block">
+          <MegaPanel mega={active.mega} />
+        </div>
+      )}
+
+      {/* Mobile drawer */}
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>
   );
 }
