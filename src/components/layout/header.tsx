@@ -179,7 +179,7 @@ export function Header() {
       {/* Linha 1 — utilities + logo */}
       <div className="border-b border-line">
         <Container className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-3 lg:h-[100px] lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
-          {/* Mobile hamburger / Desktop placeholder */}
+          {/* Mobile hamburger / Desktop utilities */}
           <div className="flex items-center lg:hidden">
             <button
               type="button"
@@ -190,7 +190,22 @@ export function Header() {
               <Icon name="menu" size={24} />
             </button>
           </div>
-          <div className="hidden lg:block" />
+          <div className="hidden items-center gap-7 text-eyebrow font-medium uppercase tracking-eyebrow lg:flex">
+            <Link
+              href={'/cadastrar' as Route}
+              className="inline-flex cursor-pointer items-center gap-2 text-champagne-dark hover:text-ink"
+            >
+              <Icon name="tag" size={14} stroke={1.2} />
+              Ganhe 10% off
+            </Link>
+            <Link
+              href={'/atendimento' as Route}
+              className="inline-flex cursor-pointer items-center gap-2 text-ink-60 hover:text-ink"
+            >
+              <Icon name="bell" size={14} stroke={1.2} />
+              Atendimento
+            </Link>
+          </div>
 
           {/* Logo centralizado */}
           <div className="flex justify-center">
