@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Card, LabeledField } from '@/components/admin/ui';
+import { Card, LabeledField, MoneyInput } from '@/components/admin/ui';
 import { Button } from '@/components/ui/button';
 import {
   saveSettingsGroupAction,
@@ -13,7 +13,7 @@ const INITIAL: ActionState = {};
 interface FieldDef {
   key: string;
   label: string;
-  type: 'text' | 'email' | 'tel' | 'number' | 'textarea';
+  type: 'text' | 'email' | 'tel' | 'number' | 'textarea' | 'money';
   optional?: boolean;
 }
 
@@ -33,23 +33,23 @@ export function SettingsGroupForm({ group, title, fields, values }: Props) {
   return (
     <Card title={title}>
       <form action={formAction} className="flex flex-col gap-4">
-        {fields.map((f) => (
-          <LabeledField key={f.key} label={f.label} optional={f.optional}>
-            {f.type === 'textarea' ? (
-              <textarea
-                name={f.key}
-                defaultValue={String(values[f.key] ?? '')}
-                rows={3}
-              />
-            ) : (
-              <input
-                type={f.type}
-                name={f.key}
-                defaultValue={String(values[f.key] ?? '')}
-              />
-            )}
-          </LabeledField>
-        ))}
+        {fields.map((f) => {
+          const raw = values[f.key];
+          return (
+            <LabeledField key={f.key} label={f.label} optional={f.optional}>
+              {f.type === 'textarea' ? (
+                <textarea name={f.key} defaultValue={String(raw ?? '')} rows={3} />
+              ) : f.type === 'money' ? (
+                <MoneyInput
+                  name={f.key}
+                  initialCents={typeof raw === 'number' ? raw : Number(raw) || 0}
+                />
+              ) : (
+                <input type={f.type} name={f.key} defaultValue={String(raw ?? '')} />
+              )}
+            </LabeledField>
+          );
+        })}
 
         {state.error && (
           <div className="border border-sale bg-[rgba(140,58,46,0.08)] px-3.5 py-2.5 text-body-sm text-sale">

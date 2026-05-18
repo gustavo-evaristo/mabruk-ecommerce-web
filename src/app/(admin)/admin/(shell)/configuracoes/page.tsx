@@ -48,7 +48,7 @@ export default async function SettingsPage() {
           title="Frete"
           values={all.shipping ?? {}}
           fields={[
-            { key: 'freeShippingThresholdCents', label: 'Frete grátis acima de (centavos)', type: 'number' },
+            { key: 'freeShippingThresholdCents', label: 'Frete grátis acima de', type: 'money' },
             { key: 'originZip', label: 'CEP de origem', type: 'text' },
           ]}
         />
