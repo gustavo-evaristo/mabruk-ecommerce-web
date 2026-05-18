@@ -3,24 +3,24 @@ import { redirect } from 'next/navigation';
 import type { Route } from 'next';
 import { AdminPageHeader } from '@/components/admin/shell';
 import { Icon } from '@/components/ui/icon';
-import { BannerForm } from '@/components/admin/forms/banner-form';
+import { LandingForm } from '@/components/admin/forms/landing-form';
 import { getAdminToken } from '@/lib/auth/admin-session';
-import { listAdminBanners } from '@/lib/api/endpoints/admin';
+import { listAdminLandings } from '@/lib/api/endpoints/admin-extras';
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function BannerEditPage({ params }: Props) {
+export default async function LandingEditPage({ params }: Props) {
   const { id } = await params;
   const token = await getAdminToken();
   if (!token) redirect('/admin/entrar');
 
-  const isNew = id === 'novo';
-  let banner = null;
+  const isNew = id === 'nova';
+  let landing = null;
   if (!isNew) {
-    const all = await listAdminBanners(token).catch(() => []);
-    banner = all.find((b) => b.id === id) ?? null;
+    const all = await listAdminLandings(token).catch(() => []);
+    landing = all.find((l) => l.id === id) ?? null;
   }
 
   return (
@@ -28,16 +28,16 @@ export default async function BannerEditPage({ params }: Props) {
       <AdminPageHeader
         subtitle={
           <span className="flex items-center gap-2">
-            <Link href={'/admin/banners' as Route} className="hover:text-ink">
-              Banners
+            <Link href={'/admin/landings' as Route} className="hover:text-ink">
+              Landings
             </Link>
             <Icon name="chevronRight" size={10} />
-            <span>{isNew ? 'Novo' : 'Editar'}</span>
+            <span>{isNew ? 'Nova' : 'Editar'}</span>
           </span>
         }
-        title={banner?.alt ?? 'Novo banner'}
+        title={landing?.name ?? 'Nova landing'}
       />
-      <BannerForm banner={banner} />
+      <LandingForm landing={landing} />
     </>
   );
 }

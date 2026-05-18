@@ -10,3 +10,6 @@ export * from './payments';
 export * from './customers';
 export * from './favorites';
 export * from './orders';
+export * from './admin-auth';
+export * from './admin';
+export * from './admin-extras';

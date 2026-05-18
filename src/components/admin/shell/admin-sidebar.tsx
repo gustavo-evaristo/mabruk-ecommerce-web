@@ -6,6 +6,17 @@ import type { Route } from 'next';
 import { Logo } from '@/components/layout/logo';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { cn } from '@/lib/utils/cn';
+import { adminLogoutAction } from '@/lib/auth/admin-actions';
+import type { AdminMe } from '@/lib/api/endpoints/admin-auth';
+
+function initials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+}
 
 interface NavItem {
   id: string;
@@ -65,7 +76,11 @@ function GroupLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  admin: AdminMe;
+}
+
+export function AdminSidebar({ admin }: AdminSidebarProps) {
   const pathname = usePathname() ?? '/admin';
 
   const isActive = (item: NavItem) => {
@@ -102,13 +117,21 @@ export function AdminSidebar() {
       <div className="border-t border-paper/10 p-4">
         <div className="flex items-center gap-3 p-2">
           <div className="grid size-8 place-items-center rounded-full bg-champagne text-body-sm font-semibold text-ink">
-            MA
+            {initials(admin.name)}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-body-sm font-medium">Mariana Aragão</div>
-            <div className="text-[10px] text-paper/50">Administradora</div>
+            <div className="truncate text-body-sm font-medium">{admin.name}</div>
+            <div className="text-[10px] text-paper/50">{admin.role}</div>
           </div>
-          <Icon name="settings" size={14} className="text-paper/50" />
+          <form action={adminLogoutAction}>
+            <button
+              type="submit"
+              title="Sair"
+              className="cursor-pointer text-paper/50 hover:text-paper"
+            >
+              <Icon name="close" size={14} />
+            </button>
+          </form>
         </div>
         <Link
           href={'/' as Route}

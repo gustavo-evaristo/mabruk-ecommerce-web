@@ -1,66 +1,37 @@
-'use client';
-
-import { useState } from 'react';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import type { Route } from 'next';
+import type { Metadata } from 'next';
 import { AdminPageHeader } from '@/components/admin/shell';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
-import { PromoBadge } from '@/components/admin/ui';
-import { formatMoney } from '@/lib/utils/format';
+import { getAdminToken } from '@/lib/auth/admin-session';
+import { listAdminPromotions, type AdminPromotion } from '@/lib/api/endpoints/admin-extras';
 
-type Section = 'campaigns' | 'coupons' | 'rules';
+export const metadata: Metadata = { title: 'Promoções — Mabruk Admin' };
 
-const STATS = [
-  { label: 'Cupons ativos', value: '3', sub: '1 expira em 6 dias' },
-  { label: 'Resgates no mês', value: '1.484', sub: 'R$ 187k em vendas atribuídas' },
-  { label: 'Desconto concedido', value: 'R$ 24.380', sub: '13% das vendas no mês' },
-  { label: 'Ticket médio com cupom', value: 'R$ 287', sub: '↓ 7% vs sem cupom' },
-];
+const STATUS_PILL: Record<AdminPromotion['status'], string> = {
+  ACTIVE: 'bg-[rgba(61,106,78,0.1)] text-success',
+  SCHEDULED: 'bg-ink text-paper',
+  EXPIRED: 'bg-cream text-ink-60',
+  PAUSED: 'bg-[rgba(168,148,111,0.14)] text-champagne-dark',
+};
 
-const CAMPAIGNS = [
-  { name: 'Dia das Mães · Coleção Oásis', period: '03 a 15 mai', discount: '20% off', sales: 64, revenue: 1388000, status: 'expirado' as const },
-  { name: 'Primeira Compra · Newsletter', period: 'Sempre ativo', discount: '10% off', sales: 384, revenue: 8924000, status: 'ativo' as const },
-  { name: 'Black Friday · 2026', period: '24 a 30 nov', discount: 'Até 40%', sales: 0, revenue: 0, status: 'agendado' as const },
-];
-
-const COUPONS = [
-  { code: 'PRIMEIRA10', type: '10% off', scope: 'Primeira compra', uses: 384, max: '∞', expires: '31/12/2026', status: 'ativo' as const },
-  { code: 'MAES26', type: '20% off', scope: 'Coleção Oásis', uses: 142, max: 500, expires: '15/05/2026', status: 'expirado' as const },
-  { code: 'INSIDER15', type: '15% off', scope: 'Clientes Insider', uses: 67, max: 200, expires: '30/06/2026', status: 'ativo' as const },
-  { code: 'FRETEGRATIS', type: 'Frete grátis', scope: 'Acima R$ 199', uses: 891, max: '∞', expires: 'sem prazo', status: 'ativo' as const },
-  { code: 'BLACK40', type: '40% off', scope: 'Toda a loja', uses: 0, max: 1000, expires: '29/11/2026', status: 'agendado' as const },
-];
-
-const RULES = [
-  { name: 'Frete grátis acima de R$ 299', active: true, desc: 'Aplica automaticamente para todos os pedidos elegíveis. Exclui coleção Celeste.' },
-  { name: 'PIX com 10% off', active: true, desc: 'Desconto à vista de 10% aplicado no checkout quando PIX é selecionado.' },
-  { name: 'Brinde para pedidos acima de R$ 500', active: false, desc: 'Adiciona pulseira mini grátis ao carrinho. Pausado por falta de estoque.' },
-  { name: 'Aniversariantes do mês: 15% off', active: true, desc: 'Cupom único enviado por e-mail aos clientes que fazem aniversário no mês.' },
-];
-
-const SECTIONS: { id: Section; label: string }[] = [
-  { id: 'campaigns', label: 'Campanhas' },
-  { id: 'coupons', label: 'Cupons' },
-  { id: 'rules', label: 'Regras automáticas' },
-];
-
-function Toggle({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`relative inline-block h-5 w-9 cursor-pointer rounded-full ${
-        active ? 'bg-success' : 'bg-ink-20'
-      }`}
-    >
-      <span
-        className={`absolute top-0.5 size-4 rounded-full bg-paper transition-all ${
-          active ? 'left-4.5' : 'left-0.5'
-        }`}
-      />
-    </span>
-  );
+function discountLabel(p: AdminPromotion): string {
+  if (p.discountType === 'PERCENT') return `${p.discountValue}% off`;
+  if (p.discountType === 'FIXED_CENTS')
+    return `${(p.discountValue / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} off`;
+  return 'Frete grátis';
 }
 
-export default function PromotionsPage() {
-  const [section, setSection] = useState<Section>('campaigns');
+export default async function PromotionsPage() {
+  const token = await getAdminToken();
+  if (!token) redirect('/admin/entrar');
+
+  const all = await listAdminPromotions(token).catch(() => []);
+  const campaigns = all.filter((p) => p.type === 'CAMPAIGN');
+  const coupons = all.filter((p) => p.type === 'COUPON');
+  const rules = all.filter((p) => p.type === 'RULE');
 
   return (
     <>
@@ -68,153 +39,71 @@ export default function PromotionsPage() {
         subtitle="Marketing"
         title="Promoções e cupons"
         action={
-          <>
-            <Button variant="secondary" size="md">
-              {section === 'coupons' ? 'Importar cupons' : 'Ver calendário'}
-            </Button>
+          <Link href={'/admin/promocoes/nova/editar' as Route}>
             <Button variant="primary" size="md" icon={<Icon name="plus" size={14} />}>
-              {section === 'coupons' ? 'Novo cupom' : 'Nova campanha'}
+              Nova
             </Button>
-          </>
+          </Link>
         }
       />
 
-      <div className="flex flex-col gap-6 p-6 lg:p-10">
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {STATS.map((s) => (
-            <div key={s.label} className="border border-line bg-paper px-5 py-4.5">
-              <div className="text-[10px] font-medium uppercase tracking-eyebrow text-ink-60">
-                {s.label}
-              </div>
-              <div className="mt-1.5 font-display text-h4 font-normal">{s.value}</div>
-              <div className="mt-0.5 text-eyebrow text-ink-60">{s.sub}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex w-fit gap-1 border border-line bg-paper p-1">
-          {SECTIONS.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setSection(s.id)}
-              className={`px-4.5 py-2.5 text-body-sm tracking-wide ${
-                section === s.id
-                  ? 'bg-ink font-medium text-paper'
-                  : 'text-ink-60 hover:text-ink'
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-
-        {section === 'campaigns' && (
-          <div className="border border-line bg-paper">
-            <div
-              className="hidden items-center gap-3 border-b border-line bg-cream px-5 py-3 text-[10px] font-medium uppercase tracking-eyebrow text-ink-60 lg:grid"
-              style={{
-                gridTemplateColumns: '40px 1.6fr 1fr 120px 100px 120px 120px 40px',
-              }}
-            >
-              <input type="checkbox" className="!w-auto !m-0" />
-              <span>Campanha</span>
-              <span>Período</span>
-              <span>Desconto</span>
-              <span className="text-right">Vendas</span>
-              <span className="text-right">Receita</span>
-              <span>Status</span>
-              <span />
-            </div>
-            {CAMPAIGNS.map((c) => (
-              <div
-                key={c.name}
-                className="grid items-center gap-3 border-b border-line px-5 py-4 text-body-sm"
-                style={{
-                  gridTemplateColumns: '40px 1.6fr 1fr 120px 100px 120px 120px 40px',
-                }}
-              >
-                <input type="checkbox" className="!w-auto !m-0" />
-                <div className="font-display text-[16px]">{c.name}</div>
-                <span className="text-body-sm text-ink-60">{c.period}</span>
-                <span className="font-medium">{c.discount}</span>
-                <span className="text-right font-mono">{c.sales || '—'}</span>
-                <span className="text-right font-mono font-medium">
-                  {c.revenue ? formatMoney(c.revenue) : '—'}
-                </span>
-                <PromoBadge status={c.status} />
-                <Icon name="chevronRight" size={14} className="text-ink-60" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {section === 'coupons' && (
-          <div className="border border-line bg-paper">
-            <div
-              className="hidden items-center gap-3 border-b border-line bg-cream px-5 py-3 text-[10px] font-medium uppercase tracking-eyebrow text-ink-60 lg:grid"
-              style={{
-                gridTemplateColumns:
-                  '40px 1.2fr 80px 1fr 100px 100px 120px 120px 40px',
-              }}
-            >
-              <input type="checkbox" className="!w-auto !m-0" />
-              <span>Código</span>
-              <span>Tipo</span>
-              <span>Escopo</span>
-              <span className="text-right">Usos</span>
-              <span className="text-right">Máx.</span>
-              <span>Validade</span>
-              <span>Status</span>
-              <span />
-            </div>
-            {COUPONS.map((c) => (
-              <div
-                key={c.code}
-                className="grid items-center gap-3 border-b border-line px-5 py-4 text-body-sm"
-                style={{
-                  gridTemplateColumns:
-                    '40px 1.2fr 80px 1fr 100px 100px 120px 120px 40px',
-                }}
-              >
-                <input type="checkbox" className="!w-auto !m-0" />
-                <span className="font-mono inline-flex self-start bg-cream px-2.5 py-1 text-body-sm font-semibold">
-                  {c.code}
-                </span>
-                <span className="font-medium">{c.type}</span>
-                <span className="text-body-sm text-ink-60">{c.scope}</span>
-                <span className="text-right font-mono">{c.uses}</span>
-                <span className="text-right font-mono text-ink-60">{c.max}</span>
-                <span className="text-eyebrow text-ink-60">{c.expires}</span>
-                <PromoBadge status={c.status} />
-                <Icon name="chevronRight" size={14} className="text-ink-60" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {section === 'rules' && (
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {RULES.map((r) => (
-              <div key={r.name} className="border border-line bg-paper p-6">
-                <div className="mb-3 flex items-start justify-between gap-3">
-                  <div className="font-display text-h6 font-normal">{r.name}</div>
-                  <Toggle active={r.active} />
-                </div>
-                <p className="text-body leading-relaxed text-ink-60">{r.desc}</p>
-                <div className="mt-4 flex items-center justify-between border-t border-line pt-4 text-eyebrow uppercase tracking-eyebrow">
-                  <span className={r.active ? 'text-success' : 'text-ink-60'}>
-                    {r.active ? '● Ativa' : '○ Pausada'}
-                  </span>
-                  <button type="button" className="text-ink underline">
-                    Editar →
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="flex flex-col gap-8 p-6 lg:p-10">
+        <Section title="Cupons" items={coupons} />
+        <Section title="Campanhas" items={campaigns} />
+        <Section title="Regras automáticas" items={rules} />
       </div>
     </>
+  );
+}
+
+function Section({ title, items }: { title: string; items: AdminPromotion[] }) {
+  return (
+    <div className="border border-line bg-paper">
+      <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
+        <div className="text-body-sm font-semibold">{title}</div>
+        <div className="text-eyebrow text-ink-60">
+          {items.length} {items.length === 1 ? 'item' : 'itens'}
+        </div>
+      </div>
+      {items.length === 0 ? (
+        <div className="px-5 py-10 text-center text-body-sm text-ink-60">
+          Nenhum item neste grupo.
+        </div>
+      ) : (
+        items.map((p) => (
+          <Link
+            key={p.id}
+            href={`/admin/promocoes/${p.id}/editar` as Route}
+            className="grid items-center gap-3 border-b border-line px-5 py-4 text-body-sm last:border-0 hover:bg-cream/40 lg:grid-cols-[1fr_120px_140px_140px_120px_40px]"
+          >
+            <div>
+              <div className="font-medium">{p.name}</div>
+              {p.code && (
+                <div className="mt-0.5 font-mono inline-flex bg-cream px-2 py-0.5 text-eyebrow font-semibold">
+                  {p.code}
+                </div>
+              )}
+              {p.description && (
+                <div className="mt-1 text-eyebrow text-ink-60">{p.description}</div>
+              )}
+            </div>
+            <span className="font-medium">{discountLabel(p)}</span>
+            <span className="text-eyebrow text-ink-60">{p.scope}</span>
+            <span className="font-mono text-eyebrow">
+              {p.usesCount}
+              {p.usesMax ? ` / ${p.usesMax}` : ''}
+            </span>
+            <span
+              className={`inline-flex self-start px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide ${
+                STATUS_PILL[p.status]
+              }`}
+            >
+              {p.status}
+            </span>
+            <Icon name="chevronRight" size={14} className="text-ink-60" />
+          </Link>
+        ))
+      )}
+    </div>
   );
 }

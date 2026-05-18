@@ -1,15 +1,18 @@
+'use client';
+
 import Link from 'next/link';
+import { useActionState } from 'react';
 import type { Route } from 'next';
-import type { Metadata } from 'next';
 import { Logo } from '@/components/layout/logo';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import { adminLoginAction, type AdminAuthFormState } from '@/lib/auth/admin-actions';
 
-export const metadata: Metadata = {
-  title: 'Acessar painel — Mabruk',
-};
+const INITIAL: AdminAuthFormState = {};
 
 export default function AdminLoginPage() {
+  const [state, formAction, pending] = useActionState(adminLoginAction, INITIAL);
+
   return (
     <div className="grid h-screen grid-cols-1 overflow-hidden lg:grid-cols-2">
       {/* Esquerda — brand */}
@@ -48,10 +51,7 @@ export default function AdminLoginPage() {
         <div className="mx-auto w-full max-w-[480px]">
           <div className="flex items-center justify-between lg:hidden">
             <Logo size={28} />
-            <Link
-              href={'/' as Route}
-              className="text-eyebrow underline text-ink-60"
-            >
+            <Link href={'/' as Route} className="text-eyebrow underline text-ink-60">
               Ir para a loja
             </Link>
           </div>
@@ -66,10 +66,7 @@ export default function AdminLoginPage() {
             </p>
           </div>
 
-          <form
-            action="/admin"
-            className="mt-9 flex flex-col gap-4.5"
-          >
+          <form action={formAction} className="mt-9 flex flex-col gap-4.5">
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
@@ -82,7 +79,6 @@ export default function AdminLoginPage() {
                 type="email"
                 name="email"
                 placeholder="voce@mabruk.com.br"
-                defaultValue="mariana@mabruk.com.br"
                 required
               />
             </div>
@@ -115,15 +111,22 @@ export default function AdminLoginPage() {
               </Link>
             </div>
 
+            {state?.error && (
+              <div className="border border-sale bg-[rgba(140,58,46,0.08)] px-3.5 py-2.5 text-body-sm text-sale">
+                {state.error}
+              </div>
+            )}
+
             <Button
               type="submit"
               variant="primary"
               size="lg"
               fullWidth
+              disabled={pending}
               iconRight={<Icon name="arrowRight" size={14} />}
               className="mt-3"
             >
-              Entrar no painel
+              {pending ? 'Entrando…' : 'Entrar no painel'}
             </Button>
 
             <div className="mt-4 flex items-start gap-3 bg-cream p-4 text-body-sm leading-relaxed text-ink-60">
@@ -140,10 +143,7 @@ export default function AdminLoginPage() {
               Suporte técnico:{' '}
               <strong className="font-mono text-ink">ti@mabruk.com.br</strong>
             </span>
-            <Link
-              href={'/' as Route}
-              className="text-ink underline hidden lg:inline"
-            >
+            <Link href={'/' as Route} className="text-ink underline hidden lg:inline">
               ← Ir para a loja
             </Link>
           </div>
