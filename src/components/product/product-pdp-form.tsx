@@ -26,7 +26,10 @@ const INSTALLMENTS = 6;
 export function ProductPdpForm({ product }: Props) {
   const cart = useCart();
   const banhosAvailable = useMemo(
-    () => Array.from(new Set(product.variants.map((v) => v.banho))),
+    () =>
+      Array.from(new Set(product.variants.map((v) => v.banho))).filter(
+        (b): b is Banho => b in BANHO_INFO,
+      ),
     [product.variants],
   );
   const [banho, setBanho] = useState<Banho>(banhosAvailable[0]);

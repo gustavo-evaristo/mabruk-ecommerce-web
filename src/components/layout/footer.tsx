@@ -1,48 +1,61 @@
 import Link from 'next/link';
+import type { Route } from 'next';
 import { Container } from '@/components/ui/container';
 import { Icon } from '@/components/ui/icon';
 import { Logo } from './logo';
+import { listCategories } from '@/lib/api/endpoints/categories';
+import { listCollections } from '@/lib/api/endpoints/collections';
 
-const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
-  {
-    title: 'Loja',
-    links: [
-      { label: 'Anéis', href: '/aneis' },
-      { label: 'Brincos', href: '/brincos' },
-      { label: 'Colares', href: '/colares' },
-      { label: 'Pulseiras', href: '/pulseiras' },
-      { label: 'Coleções', href: '/colecoes' },
-    ],
-  },
+const STATIC_COLUMNS: { title: string; links: { label: string; href: Route }[] }[] = [
   {
     title: 'Mabruk',
     links: [
-      { label: 'Sobre', href: '/sobre' },
-      { label: 'Cuidados', href: '/cuidados' },
-      { label: 'Garantia', href: '/garantia' },
-      { label: 'Atendimento', href: '/atendimento' },
+      { label: 'Sobre', href: '/sobre' as Route },
+      { label: 'Cuidados', href: '/cuidados' as Route },
+      { label: 'Garantia', href: '/garantia' as Route },
+      { label: 'Atendimento', href: '/atendimento' as Route },
     ],
   },
   {
     title: 'Sua conta',
     links: [
-      { label: 'Entrar', href: '/entrar' },
-      { label: 'Pedidos', href: '/conta/pedidos' },
-      { label: 'Favoritos', href: '/conta/favoritos' },
-      { label: 'Endereços', href: '/conta/enderecos' },
+      { label: 'Entrar', href: '/entrar' as Route },
+      { label: 'Pedidos', href: '/conta/pedidos' as Route },
+      { label: 'Favoritos', href: '/conta/favoritos' as Route },
+      { label: 'Endereços', href: '/conta/enderecos' as Route },
     ],
   },
   {
     title: 'Ajuda',
     links: [
-      { label: 'Trocas e devoluções', href: '/trocas' },
-      { label: 'Política de privacidade', href: '/privacidade' },
-      { label: 'Termos de uso', href: '/termos' },
+      { label: 'Trocas e devoluções', href: '/trocas' as Route },
+      { label: 'Política de privacidade', href: '/privacidade' as Route },
+      { label: 'Termos de uso', href: '/termos' as Route },
     ],
   },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const [categories, collections] = await Promise.all([
+    listCategories().catch(() => []),
+    listCollections().catch(() => []),
+  ]);
+
+  const lojaLinks: { label: string; href: Route }[] = [
+    ...categories.slice(0, 5).map((c) => ({
+      label: c.name,
+      href: `/${c.slug}` as Route,
+    })),
+  ];
+  if (collections.length > 0) {
+    lojaLinks.push({ label: 'Coleções', href: '/colecoes' as Route });
+  }
+
+  const columns = [
+    ...(lojaLinks.length > 0 ? [{ title: 'Loja', links: lojaLinks }] : []),
+    ...STATIC_COLUMNS,
+  ];
+
   return (
     <footer className="border-t border-line bg-paper">
       <Container className="py-12 lg:py-20">
@@ -50,10 +63,11 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Logo size={28} />
             <p className="mt-6 max-w-xs text-body-sm leading-relaxed text-ink-60">
-              Joias atemporais para o dia a dia. Banho ouro 18k, prata 925 e aço inoxidável com garantia.
+              Joias atemporais para o dia a dia. Banho ouro 18k, prata 925 e aço inoxidável
+              com garantia.
             </p>
             <Link
-              href="https://www.instagram.com"
+              href={'https://www.instagram.com' as Route}
               aria-label="Instagram"
               className="mt-6 inline-flex items-center gap-2 text-ink transition-colors hover:text-ink-60"
             >
@@ -62,7 +76,7 @@ export function Footer() {
             </Link>
           </div>
 
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <div key={col.title}>
               <h4 className="text-eyebrow font-medium uppercase tracking-eyebrow text-ink">
                 {col.title}
@@ -71,7 +85,7 @@ export function Footer() {
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href as never}
+                      href={link.href}
                       className="text-body-sm text-ink-60 transition-colors hover:text-ink"
                     >
                       {link.label}

@@ -29,11 +29,10 @@ export default async function CollectionPage({ params }: Props) {
   if (!data) notFound();
 
   const others = allCollections.filter((c) => c.slug !== slug);
-  const isDark = data.collection.slug === 'celeste';
-
-  const inkClass = isDark ? 'text-paper' : 'text-ink';
-  const subClass = isDark ? 'text-paper/70' : 'text-ink-60';
-  const accentBg = isDark ? 'bg-ink' : 'bg-cream';
+  const inkClass = 'text-ink';
+  const subClass = 'text-ink-60';
+  const accentBg = 'bg-cream';
+  const isDark = false;
 
   return (
     <>

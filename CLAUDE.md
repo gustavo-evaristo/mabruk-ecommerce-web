@@ -22,7 +22,7 @@ Frontend Next.js 16 da loja Mabruk Semijoias. Consome a API NestJS em `../api`.
 
 1. **Server Components fazem o fetch**; Client Components recebem dados via props ou usam React Query para mutações.
 2. **API client** em `src/lib/api/`: tipos em `types.ts`, fetch wrapper em `client.ts`, funções por recurso em `endpoints/*.ts`.
-3. **Mock-first**: enquanto `USE_MOCK=true` (em `.env.local`), `endpoints/*.ts` retorna dados de `src/lib/mock/*.ts`. Trocar para `false` quando integrar com a API real.
+3. **API real para B2C**: catálogo (produtos, categorias, coleções, banners, tags) consome a API NestJS em `API_URL`. O painel B2B (`/admin/*`) ainda usa mocks em `src/lib/mock/admin.ts` até a próxima fase de integração.
 4. **Money**: a API entrega `cents` (Int). Sempre usar `formatMoney(cents)` antes de exibir.
 5. **Guest cart**: o cliente pode comprar sem cadastro. Guardamos `cartId` + `guestToken` em cookie HTTP-only (via Server Action) e enviamos no header `X-Cart-Token`.
 6. **Auth**: JWT em cookie HTTP-only após login. Server Components leem o cookie e injetam `Authorization: Bearer <token>`.
@@ -38,9 +38,9 @@ pnpm lint
 pnpm format
 ```
 
-## Próximos passos para integrar com API real
+## Próximos passos
 
-1. Subir a API: `cd ../api && pnpm dev`
-2. Cadastrar conteúdo no painel admin via Swagger (`http://localhost:3000/api`)
-3. Trocar `USE_MOCK=false` em `web/.env.local`
-4. Reiniciar `pnpm dev` no frontend
+1. Subir a API: `cd ../api && pnpm dev` (porta 3000)
+2. Cadastrar conteúdo via Swagger em `http://localhost:3000/api` (categorias, coleções, produtos com variantes/imagens, banners)
+3. `pnpm dev` no frontend (porta 3001)
+4. **Pendente**: integrar painel B2B (`/admin/*`) com API — substituir mocks de `src/lib/mock/admin.ts`

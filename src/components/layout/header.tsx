@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
@@ -11,9 +11,10 @@ import { Container } from '@/components/ui/container';
 import { Icon } from '@/components/ui/icon';
 import { useCart } from '@/lib/providers/cart-provider';
 import { cn } from '@/lib/utils/cn';
+import type { Category, Collection } from '@/lib/api/types';
 
 // ============================================================
-// Mega menus
+// Mega menu types
 // ============================================================
 
 interface MegaCol {
@@ -31,114 +32,8 @@ interface MegaFeature {
 
 interface MegaMenu {
   cols: MegaCol[];
-  feature: MegaFeature;
+  feature: MegaFeature | null;
 }
-
-const NOVIDADES_MEGA: MegaMenu = {
-  cols: [
-    {
-      title: 'Recém-chegadas',
-      links: [
-        { label: 'Lançamentos da semana', href: '/novidades' as Route },
-        { label: 'Pré-venda', href: '/pre-venda' as Route },
-        { label: 'Edições limitadas', href: '/edicoes-limitadas' as Route },
-        { label: 'Voltaram ao estoque', href: '/voltaram-ao-estoque' as Route },
-      ],
-    },
-    {
-      title: 'Por ocasião',
-      links: [
-        { label: 'Presente para ela', href: '/ocasiao/presente' as Route },
-        { label: 'Trabalho', href: '/ocasiao/trabalho' as Route },
-        { label: 'Festa', href: '/ocasiao/festa' as Route },
-        { label: 'Dia a dia', href: '/ocasiao/dia-a-dia' as Route },
-      ],
-    },
-  ],
-  feature: {
-    eyebrow: 'Modelo · em destaque',
-    title: 'Coleção Celeste',
-    desc: 'Inspirada no céu noturno',
-    href: '/colecao/celeste' as Route,
-    imageUrl:
-      'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=600&q=80',
-  },
-};
-
-const CATEGORIAS_MEGA: MegaMenu = {
-  cols: [
-    {
-      title: 'Joias',
-      links: [
-        { label: 'Anéis', href: '/aneis' as Route },
-        { label: 'Brincos', href: '/brincos' as Route },
-        { label: 'Colares', href: '/colares' as Route },
-        { label: 'Pulseiras', href: '/pulseiras' as Route },
-        { label: 'Tornozeleiras', href: '/tornozeleiras' as Route },
-      ],
-    },
-    {
-      title: 'Conjuntos & sets',
-      links: [
-        { label: 'Conjuntos completos', href: '/conjuntos' as Route },
-        { label: 'Trios de anéis', href: '/trios-de-aneis' as Route },
-        { label: 'Mix de brincos', href: '/mix-de-brincos' as Route },
-        { label: 'Layered necklaces', href: '/layered-necklaces' as Route },
-      ],
-    },
-    {
-      title: 'Por material',
-      links: [
-        { label: 'Banho de ouro 18k', href: '/material/ouro-18k' as Route },
-        { label: 'Prata 925', href: '/material/prata-925' as Route },
-        { label: 'Aço inoxidável', href: '/material/aco-inox' as Route },
-      ],
-    },
-  ],
-  feature: {
-    eyebrow: 'Modelo · em destaque',
-    title: 'Coleção Serene',
-    desc: 'Linhas etéreas e minimalistas',
-    href: '/colecao/serene' as Route,
-    imageUrl:
-      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=600&q=80',
-  },
-};
-
-const COLECOES_MEGA: MegaMenu = {
-  cols: [
-    {
-      title: 'Coleções atuais',
-      links: [
-        { label: 'Serene', href: '/colecao/serene' as Route },
-        { label: 'Celeste', href: '/colecao/celeste' as Route },
-        { label: 'Oásis', href: '/colecao/oasis' as Route },
-        { label: 'Atemporais', href: '/colecao/atemporais' as Route },
-      ],
-    },
-    {
-      title: 'Editoriais',
-      links: [
-        { label: 'Outono · Inverno 26', href: '/editorial/outono-inverno-26' as Route },
-        { label: 'Verão 25', href: '/editorial/verao-25' as Route },
-        { label: 'Noivas', href: '/editorial/noivas' as Route },
-        { label: 'Cápsula Oscar Freire', href: '/editorial/capsula-oscar-freire' as Route },
-      ],
-    },
-  ],
-  feature: {
-    eyebrow: 'Modelo · em destaque',
-    title: 'Coleção Oásis',
-    desc: 'Toque dourado atemporal',
-    href: '/colecao/oasis' as Route,
-    imageUrl:
-      'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=600&q=80',
-  },
-};
-
-// ============================================================
-// Nav items
-// ============================================================
 
 interface NavItem {
   key: string;
@@ -147,27 +42,96 @@ interface NavItem {
   mega?: MegaMenu;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { key: 'novidades', label: 'Novidades', href: '/novidades' as Route, mega: NOVIDADES_MEGA },
-  { key: 'categorias', label: 'Categorias', href: '/categorias' as Route, mega: CATEGORIAS_MEGA },
-  { key: 'aneis', label: 'Anéis', href: '/aneis' as Route },
-  { key: 'brincos', label: 'Brincos', href: '/brincos' as Route },
-  { key: 'colares', label: 'Colares', href: '/colares' as Route },
-  { key: 'pulseiras', label: 'Pulseiras', href: '/pulseiras' as Route },
-  { key: 'colecoes', label: 'Coleções', href: '/colecoes' as Route, mega: COLECOES_MEGA },
-  { key: 'revendedoras', label: 'Seja uma revendedora', href: '/revendedoras' as Route },
-];
-
 // ============================================================
 // Header
 // ============================================================
 
-export function Header() {
+interface HeaderProps {
+  categories: Category[];
+  collections: Collection[];
+}
+
+export function Header({ categories, collections }: HeaderProps) {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems, open: openCart } = useCart();
 
-  const active = NAV_ITEMS.find((i) => i.key === openKey);
+  const navItems = useMemo<NavItem[]>(() => {
+    const featuredCollection = collections[0] ?? null;
+    const collectionFeature: MegaFeature | null =
+      featuredCollection && featuredCollection.coverImageUrl
+        ? {
+            eyebrow: 'Coleção · em destaque',
+            title: featuredCollection.name,
+            desc: featuredCollection.description ?? '',
+            href: `/colecao/${featuredCollection.slug}` as Route,
+            imageUrl: featuredCollection.coverImageUrl,
+          }
+        : null;
+
+    const items: NavItem[] = [];
+
+    if (categories.length > 0) {
+      const categoriasMega: MegaMenu = {
+        cols: [
+          {
+            title: 'Joias',
+            links: categories.map((c) => ({
+              label: c.name,
+              href: `/${c.slug}` as Route,
+            })),
+          },
+        ],
+        feature: collectionFeature,
+      };
+      items.push({
+        key: 'categorias',
+        label: 'Categorias',
+        href: '/categorias' as Route,
+        mega: categoriasMega,
+      });
+    }
+
+    // Top 4 categorias como links diretos
+    categories.slice(0, 4).forEach((c) =>
+      items.push({
+        key: c.slug,
+        label: c.name,
+        href: `/${c.slug}` as Route,
+      }),
+    );
+
+    if (collections.length > 0) {
+      const colecoesMega: MegaMenu = {
+        cols: [
+          {
+            title: 'Coleções',
+            links: collections.map((c) => ({
+              label: c.name,
+              href: `/colecao/${c.slug}` as Route,
+            })),
+          },
+        ],
+        feature: collectionFeature,
+      };
+      items.push({
+        key: 'colecoes',
+        label: 'Coleções',
+        href: '/colecoes' as Route,
+        mega: colecoesMega,
+      });
+    }
+
+    items.push({
+      key: 'revendedoras',
+      label: 'Seja uma revendedora',
+      href: '/revendedoras' as Route,
+    });
+
+    return items;
+  }, [categories, collections]);
+
+  const active = navItems.find((i) => i.key === openKey);
 
   return (
     <header
@@ -232,9 +196,6 @@ export function Header() {
             >
               <span className="relative inline-flex">
                 <Icon name="heart" size={22} stroke={1.2} />
-                <span className="font-mono nums absolute -top-1.5 -right-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-ink px-1.5 text-[10px] font-semibold text-paper ring-2 ring-paper">
-                  2
-                </span>
               </span>
               <span className="hidden text-eyebrow font-medium uppercase tracking-eyebrow lg:inline">
                 Favoritos
@@ -263,45 +224,47 @@ export function Header() {
       </div>
 
       {/* Linha 2 — Nav (esconde no mobile, usa hamburger) */}
-      <div className="hidden border-b border-line lg:block">
-        <Container className="flex h-[54px] items-center justify-center gap-10">
-          {NAV_ITEMS.map((item) => {
-            const isOpen = openKey === item.key;
-            return (
-              <div
-                key={item.key}
-                onMouseEnter={() => setOpenKey(item.mega ? item.key : null)}
-                className="flex h-full items-center"
-              >
-                {item.mega ? (
-                  <button
-                    type="button"
-                    aria-haspopup="true"
-                    aria-expanded={isOpen}
-                    className={cn(
-                      '-mb-px inline-flex h-full cursor-default items-center gap-1.5 border-b-2 bg-transparent text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
-                      isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
-                    )}
-                  >
-                    {item.label}
-                    <Icon name="chevronDown" size={10} stroke={1.5} />
-                  </button>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      '-mb-px inline-flex h-full items-center gap-1.5 border-b-2 text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
-                      isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </div>
-            );
-          })}
-        </Container>
-      </div>
+      {navItems.length > 1 && (
+        <div className="hidden border-b border-line lg:block">
+          <Container className="flex h-[54px] items-center justify-center gap-10">
+            {navItems.map((item) => {
+              const isOpen = openKey === item.key;
+              return (
+                <div
+                  key={item.key}
+                  onMouseEnter={() => setOpenKey(item.mega ? item.key : null)}
+                  className="flex h-full items-center"
+                >
+                  {item.mega ? (
+                    <button
+                      type="button"
+                      aria-haspopup="true"
+                      aria-expanded={isOpen}
+                      className={cn(
+                        '-mb-px inline-flex h-full cursor-default items-center gap-1.5 border-b-2 bg-transparent text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
+                        isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
+                      )}
+                    >
+                      {item.label}
+                      <Icon name="chevronDown" size={10} stroke={1.5} />
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        '-mb-px inline-flex h-full items-center gap-1.5 border-b-2 text-eyebrow font-medium uppercase tracking-eyebrow-lg transition-colors',
+                        isOpen ? 'border-ink text-ink' : 'border-transparent text-ink hover:text-ink-60',
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
+          </Container>
+        </div>
+      )}
 
       {/* Mega-menu panel (apenas desktop) */}
       {active?.mega && (
@@ -311,7 +274,12 @@ export function Header() {
       )}
 
       {/* Mobile drawer */}
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileMenu
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        categories={categories}
+        collections={collections}
+      />
     </header>
   );
 }
@@ -321,12 +289,13 @@ export function Header() {
 // ============================================================
 
 function MegaPanel({ mega }: { mega: MegaMenu }) {
+  const featureColCount = mega.feature ? 1 : 0;
   return (
     <div className="absolute inset-x-0 top-full border-b border-line bg-paper shadow-mega animate-fade-in">
       <div
         className="container-mabruk grid gap-12 py-10 pb-12"
         style={{
-          gridTemplateColumns: `repeat(${mega.cols.length}, minmax(0, 1fr)) 320px`,
+          gridTemplateColumns: `repeat(${mega.cols.length}, minmax(0, 1fr))${featureColCount ? ' 320px' : ''}`,
         }}
       >
         {mega.cols.map((col) => (
@@ -346,26 +315,30 @@ function MegaPanel({ mega }: { mega: MegaMenu }) {
           </div>
         ))}
 
-        <Link href={mega.feature.href} className="group block">
-          <div className="relative aspect-[4/5] max-h-72 overflow-hidden bg-cream">
-            <Image
-              src={mega.feature.imageUrl}
-              alt={mega.feature.title}
-              fill
-              sizes="320px"
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-            />
-            <div className="absolute bottom-3 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-eyebrow-lg text-ink-40">
-              {mega.feature.eyebrow}
+        {mega.feature && (
+          <Link href={mega.feature.href} className="group block">
+            <div className="relative aspect-[4/5] max-h-72 overflow-hidden bg-cream">
+              <Image
+                src={mega.feature.imageUrl}
+                alt={mega.feature.title}
+                fill
+                sizes="320px"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+              />
+              <div className="absolute bottom-3 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-eyebrow-lg text-ink-40">
+                {mega.feature.eyebrow}
+              </div>
             </div>
-          </div>
-          <div className="mt-3 font-display text-h6">{mega.feature.title}</div>
-          <div className="mt-1 text-body-sm text-ink-60">{mega.feature.desc}</div>
-          <span className="mt-3 inline-flex items-center gap-1.5 border-b border-ink pb-0.5 text-eyebrow font-medium uppercase tracking-eyebrow">
-            Explorar
-            <Icon name="arrowRight" size={11} />
-          </span>
-        </Link>
+            <div className="mt-3 font-display text-h6">{mega.feature.title}</div>
+            {mega.feature.desc && (
+              <div className="mt-1 text-body-sm text-ink-60">{mega.feature.desc}</div>
+            )}
+            <span className="mt-3 inline-flex items-center gap-1.5 border-b border-ink pb-0.5 text-eyebrow font-medium uppercase tracking-eyebrow">
+              Explorar
+              <Icon name="arrowRight" size={11} />
+            </span>
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ export default function CartPage() {
         <p className="max-w-md text-body-md text-ink-60">
           Vamos compor a sua próxima joia? Comece pelas categorias ou pelas coleções.
         </p>
-        <Link href="/aneis">
+        <Link href={'/' as Route}>
           <Button variant="primary" iconRight={<Icon name="arrowRight" size={14} />}>
             Explorar peças
           </Button>
@@ -157,7 +157,7 @@ export default function CartPage() {
           ))}
 
           <div className="mt-8">
-            <Link href="/aneis">
+            <Link href={'/' as Route}>
               <Button variant="ghost" size="sm" icon={<Icon name="arrowLeft" size={12} />}>
                 Continuar comprando
               </Button>

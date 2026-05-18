@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Header } from '@/components/layout/header';
+import { SiteHeader } from '@/components/layout/site-header';
 import { Footer } from '@/components/layout/footer';
 import { Container } from '@/components/ui/container';
 import { Icon, type IconName } from '@/components/ui/icon';
@@ -16,7 +16,7 @@ const USER = {
 export default function ContaLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
+      <SiteHeader />
 
       {/* Saudação */}
       <section className="border-b border-line bg-cream">

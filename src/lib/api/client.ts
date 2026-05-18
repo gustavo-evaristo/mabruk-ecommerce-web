@@ -80,6 +80,10 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
 
   const method = opts.method ?? (opts.body !== undefined ? 'POST' : 'GET');
 
+  // Se o caller passa `next: { revalidate }`, deixa o Next gerenciar cache.
+  // Caso contrário, default é `no-store` (mutations e leituras frescas).
+  const cache = opts.cache ?? (opts.next?.revalidate !== undefined ? undefined : 'no-store');
+
   const res = await fetch(url, {
     method,
     headers,
@@ -89,7 +93,7 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
         : opts.body instanceof FormData
           ? (opts.body as FormData)
           : JSON.stringify(opts.body),
-    cache: opts.cache ?? (method === 'GET' ? 'no-store' : 'no-store'),
+    cache,
     next: opts.next,
   });
 
@@ -116,17 +120,3 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
   return (await res.text()) as unknown as T;
 }
 
-/**
- * Default: usa mocks. Para chamar a API real, defina explicitamente
- * `USE_MOCK=false` (server) ou `NEXT_PUBLIC_USE_MOCK=false` (client).
- *
- * Isso é um default conservador: a API real ainda não está deployada em
- * produção, então o front sobe usando mocks. Quando a API estiver no ar,
- * vire as flags pra "false" no painel de env vars do Vercel.
- */
-export function useMock(): boolean {
-  const server = process.env.USE_MOCK;
-  const client = process.env.NEXT_PUBLIC_USE_MOCK;
-  if (server === 'false' || client === 'false') return false;
-  return true;
-}

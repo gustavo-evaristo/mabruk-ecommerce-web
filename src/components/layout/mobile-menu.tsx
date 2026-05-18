@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Route } from 'next';
 import { Icon } from '@/components/ui/icon';
 import { cn } from '@/lib/utils/cn';
+import type { Category, Collection } from '@/lib/api/types';
 
 interface NavSection {
   key: string;
@@ -14,50 +15,48 @@ interface NavSection {
   links?: { label: string; href: Route }[];
 }
 
-const SECTIONS: NavSection[] = [
-  {
-    key: 'novidades',
-    label: 'Novidades',
-    links: [
-      { label: 'Lançamentos da semana', href: '/novidades' as Route },
-      { label: 'Pré-venda', href: '/pre-venda' as Route },
-      { label: 'Edições limitadas', href: '/edicoes-limitadas' as Route },
-      { label: 'Voltaram ao estoque', href: '/voltaram-ao-estoque' as Route },
-    ],
-  },
-  {
-    key: 'categorias',
-    label: 'Categorias',
-    links: [
-      { label: 'Anéis', href: '/aneis' as Route },
-      { label: 'Brincos', href: '/brincos' as Route },
-      { label: 'Colares', href: '/colares' as Route },
-      { label: 'Conjuntos', href: '/conjuntos' as Route },
-      { label: 'Pulseiras', href: '/pulseiras' as Route },
-      { label: 'Braceletes', href: '/braceletes' as Route },
-      { label: 'Tornozeleiras', href: '/tornozeleiras' as Route },
-    ],
-  },
-  {
-    key: 'colecoes',
-    label: 'Coleções',
-    links: [
-      { label: 'Serene', href: '/colecao/serene' as Route },
-      { label: 'Celeste', href: '/colecao/celeste' as Route },
-      { label: 'Oásis', href: '/colecao/oasis' as Route },
-    ],
-  },
-  { key: 'revendedoras', label: 'Seja uma revendedora', href: '/revendedoras' as Route },
-  { key: 'rastrear', label: 'Rastrear pedido', href: '/rastrear' as Route },
-];
-
 interface Props {
   open: boolean;
   onClose: () => void;
+  categories: Category[];
+  collections: Collection[];
 }
 
-export function MobileMenu({ open, onClose }: Props) {
+export function MobileMenu({ open, onClose, categories, collections }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
+
+  const sections = useMemo<NavSection[]>(() => {
+    const list: NavSection[] = [];
+
+    if (categories.length > 0) {
+      list.push({
+        key: 'categorias',
+        label: 'Categorias',
+        links: categories.map((c) => ({
+          label: c.name,
+          href: `/${c.slug}` as Route,
+        })),
+      });
+    }
+
+    if (collections.length > 0) {
+      list.push({
+        key: 'colecoes',
+        label: 'Coleções',
+        links: collections.map((c) => ({
+          label: c.name,
+          href: `/colecao/${c.slug}` as Route,
+        })),
+      });
+    }
+
+    list.push(
+      { key: 'revendedoras', label: 'Seja uma revendedora', href: '/revendedoras' as Route },
+      { key: 'rastrear', label: 'Rastrear pedido', href: '/rastrear' as Route },
+    );
+
+    return list;
+  }, [categories, collections]);
 
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
@@ -111,7 +110,7 @@ export function MobileMenu({ open, onClose }: Props) {
 
         {/* Sections */}
         <nav className="flex-1 overflow-y-auto px-2 py-2">
-          {SECTIONS.map((s) => {
+          {sections.map((s) => {
             const isOpen = expanded === s.key;
             if (s.links) {
               return (

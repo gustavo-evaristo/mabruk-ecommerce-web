@@ -65,7 +65,7 @@ export function MiniCart() {
             <p className="text-body-sm text-ink-60">
               Comece a montar a sua composição.
             </p>
-            <Link href="/aneis" onClick={close}>
+            <Link href="/" onClick={close}>
               <Button variant="primary">Explorar peças</Button>
             </Link>
           </div>

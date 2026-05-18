@@ -1,4 +1,4 @@
-import { Header, Footer } from '@/components/layout';
+import { SiteHeader, Footer } from '@/components/layout';
 import { Button, Container, Icon, QtyStepperDemo, Stars, Tag } from './_parts';
 import { formatMoney } from '@/lib/utils/format';
 
@@ -10,7 +10,7 @@ import { formatMoney } from '@/lib/utils/format';
 export default function PlaygroundPage() {
   return (
     <>
-      <Header />
+      <SiteHeader />
       <main className="flex-1 bg-paper">
         <Container className="py-16">
           <div className="mb-12">
