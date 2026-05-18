@@ -1,24 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, type FormEvent } from 'react';
+import { useActionState } from 'react';
 import type { Route } from 'next';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { AuthTabs } from '@/components/auth/auth-tabs';
+import { loginAction, type AuthFormState } from '@/lib/auth/actions';
+
+const INITIAL: AuthFormState = {};
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      window.location.href = '/conta';
-    }, 600);
-  }
+  const [state, formAction, pending] = useActionState(loginAction, INITIAL);
 
   return (
     <div className="w-full max-w-[460px]">
@@ -34,12 +27,12 @@ export default function LoginPage() {
 
       <AuthTabs />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form action={formAction} className="flex flex-col gap-4">
         <Field label="E-mail">
-          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" />
+          <input type="email" name="email" required placeholder="seu@email.com" />
         </Field>
         <Field label="Senha">
-          <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+          <input type="password" name="password" required placeholder="••••••••" />
         </Field>
         <div className="-mt-1 flex items-center justify-between">
           <label className="flex items-center gap-2 text-body-xs text-ink-60">
@@ -50,8 +43,22 @@ export default function LoginPage() {
             Esqueci a senha
           </Link>
         </div>
-        <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading} className="mt-3">
-          {loading ? 'Entrando…' : 'Entrar'}
+
+        {state?.error && (
+          <div className="border border-sale bg-[rgba(140,58,46,0.08)] px-3.5 py-2.5 text-body-sm text-sale">
+            {state.error}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          fullWidth
+          disabled={pending}
+          className="mt-3"
+        >
+          {pending ? 'Entrando…' : 'Entrar'}
         </Button>
       </form>
 

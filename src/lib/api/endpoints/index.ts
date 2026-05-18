@@ -8,4 +8,5 @@ export * from './cart';
 export * from './checkout';
 export * from './payments';
 export * from './customers';
+export * from './favorites';
 export * from './orders';

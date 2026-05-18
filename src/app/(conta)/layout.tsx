@@ -1,44 +1,64 @@
-import Link from 'next/link';
-import type { Route } from 'next';
 import { SiteHeader } from '@/components/layout/site-header';
 import { Footer } from '@/components/layout/footer';
 import { Container } from '@/components/ui/container';
-import { Icon, type IconName } from '@/components/ui/icon';
 import { AccountSidebar } from '@/components/account/account-sidebar';
+import { LogoutButton } from '@/components/account/logout-button';
+import { getAuthToken } from '@/lib/auth/session';
+import { getCustomerMe } from '@/lib/api/endpoints/customers';
+import { redirect } from 'next/navigation';
 
-const USER = {
-  firstName: 'Gustavo',
-  email: 'gustavo@email.com.br',
-  initials: 'GE',
-  memberSince: 'janeiro de 2025',
-};
+const MONTHS = [
+  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
+];
 
-export default function ContaLayout({ children }: { children: React.ReactNode }) {
+function initials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+}
+
+function memberSince(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return `${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+export default async function ContaLayout({ children }: { children: React.ReactNode }) {
+  const token = await getAuthToken();
+  if (!token) redirect('/entrar');
+
+  let customer;
+  try {
+    customer = await getCustomerMe(token);
+  } catch {
+    redirect('/entrar');
+  }
+
+  const firstName = customer.name.split(/\s+/)[0] ?? customer.name;
+
   return (
     <>
       <SiteHeader />
 
-      {/* Saudação */}
       <section className="border-b border-line bg-cream">
         <Container className="flex flex-col gap-5 py-8 sm:flex-row sm:items-center sm:gap-8 lg:py-12">
           <div className="grid size-16 shrink-0 place-items-center rounded-full bg-ink font-display text-h5 text-paper lg:size-22 lg:text-h4">
-            {USER.initials}
+            {initials(customer.name)}
           </div>
           <div className="flex-1">
             <div className="eyebrow">Olá,</div>
-            <h1 className="mt-1.5 font-display text-h3 leading-none lg:text-h2">{USER.firstName}</h1>
+            <h1 className="mt-1.5 font-display text-h3 leading-none lg:text-h2">{firstName}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-body-xs text-ink-60">
-              <span>{USER.email}</span>
+              <span>{customer.email}</span>
               <span className="hidden sm:inline">·</span>
-              <span>Cliente desde {USER.memberSince}</span>
+              <span>Cliente desde {memberSince(customer.createdAt)}</span>
             </div>
           </div>
-          <Link
-            href="/"
-            className="self-start border border-line px-4 py-2.5 text-eyebrow font-medium uppercase tracking-eyebrow sm:self-auto"
-          >
-            Sair da conta
-          </Link>
+          <LogoutButton />
         </Container>
       </section>
 

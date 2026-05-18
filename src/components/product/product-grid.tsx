@@ -6,6 +6,10 @@ interface ProductGridProps {
   products: Product[];
   cols?: 2 | 3 | 4;
   className?: string;
+  /** IDs já favoritados — usado pra pintar o coração. */
+  favoriteIds?: Set<string>;
+  /** Marca todos os produtos como favoritos (atalho pra /conta/favoritos). */
+  allFavorited?: boolean;
 }
 
 const colsClasses = {
@@ -14,11 +18,21 @@ const colsClasses = {
   4: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
 } as const;
 
-export function ProductGrid({ products, cols = 4, className }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  cols = 4,
+  className,
+  favoriteIds,
+  allFavorited,
+}: ProductGridProps) {
   return (
     <div className={cn('grid gap-x-8 gap-y-12', colsClasses[cols], className)}>
       {products.map((p) => (
-        <ProductCard key={p.id} product={p} />
+        <ProductCard
+          key={p.id}
+          product={p}
+          isFavorite={allFavorited || favoriteIds?.has(p.id)}
+        />
       ))}
     </div>
   );

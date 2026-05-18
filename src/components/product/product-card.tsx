@@ -6,6 +6,7 @@ import { formatMoney, installmentValue } from '@/lib/utils/format';
 import { Icon } from '@/components/ui/icon';
 import { Tag } from '@/components/ui/tag';
 import { cn } from '@/lib/utils/cn';
+import { FavoriteButton } from './favorite-button';
 
 interface ProductCardProps {
   product: Product;
@@ -13,11 +14,13 @@ interface ProductCardProps {
   badges?: ('new' | 'sale')[];
   /** Compact = sem subtítulo de coleção, sem parcelas. */
   compact?: boolean;
+  /** Se este produto já está na lista de favoritos do usuário. */
+  isFavorite?: boolean;
 }
 
 const INSTALLMENTS = 6;
 
-export function ProductCard({ product, badges, compact }: ProductCardProps) {
+export function ProductCard({ product, badges, compact, isFavorite }: ProductCardProps) {
   const priceCents = product.priceFromCents;
   const hasRange = product.priceFromCents !== product.priceToCents;
   const href = `/produto/${product.slug}` as Route;
@@ -46,13 +49,19 @@ export function ProductCard({ product, badges, compact }: ProductCardProps) {
             {!product.inStock && <Tag variant="line">Esgotado</Tag>}
           </div>
 
-          {/* Wishlist (decorativo no card; o link do produto pega o clique) */}
-          <span
-            aria-hidden
-            className="absolute top-3 right-3 grid size-9 place-items-center rounded-full bg-paper/90 text-ink opacity-0 transition-opacity duration-250 group-hover:opacity-100"
+          {/* Favoritar — sobreposto ao link do produto */}
+          <div
+            className={cn(
+              'absolute top-3 right-3 transition-opacity duration-250',
+              isFavorite ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+            )}
           >
-            <Icon name="heart" size={14} />
-          </span>
+            <FavoriteButton
+              productId={product.id}
+              initialIsFavorite={isFavorite ?? false}
+              size={14}
+            />
+          </div>
 
           {/* Quick add — slides up on hover */}
           <div className="absolute right-3 bottom-3 left-3 translate-y-2 opacity-0 transition-all duration-250 group-hover:translate-y-0 group-hover:opacity-100">
