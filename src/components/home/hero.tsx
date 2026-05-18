@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui/container';
 import { Icon } from '@/components/ui/icon';
 import { formatMoney } from '@/lib/utils/format';
+import {
+  FreeShippingThreshold,
+  InstallmentBadge,
+} from '@/components/ui/installment-text';
 import type { Category, Collection, Product } from '@/lib/api/types';
 
 const HERO_IMAGE =
@@ -64,16 +68,20 @@ export function Hero({ primaryCategory, featuredCollection, featuredProduct }: P
             )}
           </div>
           <div className="mt-4 flex flex-wrap gap-6 border-t border-ink/10 pt-6 lg:mt-8 lg:gap-8 lg:pt-8">
-            {[
-              { label: 'Banho de', value: 'Ouro 18k' },
-              { label: 'Garantia', value: '12 meses' },
-              { label: 'Frete grátis acima', value: 'R$ 300,00' },
-            ].map((s) => (
-              <div key={s.label} className="flex flex-col gap-1">
-                <div className="eyebrow !text-ink-60">{s.label}</div>
-                <div className="font-display text-body-xl lg:text-lead">{s.value}</div>
+            <div className="flex flex-col gap-1">
+              <div className="eyebrow !text-ink-60">Banho de</div>
+              <div className="font-display text-body-xl lg:text-lead">Ouro 18k</div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="eyebrow !text-ink-60">Garantia</div>
+              <div className="font-display text-body-xl lg:text-lead">12 meses</div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="eyebrow !text-ink-60">Frete grátis acima</div>
+              <div className="font-display text-body-xl lg:text-lead">
+                <FreeShippingThreshold />
               </div>
-            ))}
+            </div>
           </div>
         </div>
 
@@ -97,7 +105,7 @@ export function Hero({ primaryCategory, featuredCollection, featuredProduct }: P
                   {featuredProduct.name}
                 </div>
                 <div className="font-mono nums text-body-xs text-ink-80 lg:text-body-sm">
-                  {formatMoney(featuredProduct.priceFromCents)} · até 6x sem juros
+                  {formatMoney(featuredProduct.priceFromCents)} · <InstallmentBadge />
                 </div>
               </Link>
             )}

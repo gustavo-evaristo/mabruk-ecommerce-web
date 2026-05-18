@@ -7,9 +7,10 @@ import { Icon } from '@/components/ui/icon';
 import { QtyStepper } from '@/components/ui/qty-stepper';
 import { Stars } from '@/components/ui/stars';
 import { Tag } from '@/components/ui/tag';
-import { formatMoney, installmentValue } from '@/lib/utils/format';
+import { formatMoney } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 import { useCart } from '@/lib/providers/cart-provider';
+import { InstallmentText } from '@/components/ui/installment-text';
 
 const BANHO_INFO: Record<Banho, { label: string; color: string }> = {
   OURO_18K: { label: 'Ouro 18k', color: '#D9C9A8' },
@@ -20,8 +21,6 @@ const BANHO_INFO: Record<Banho, { label: string; color: string }> = {
 interface Props {
   product: ProductDetails;
 }
-
-const INSTALLMENTS = 6;
 
 export function ProductPdpForm({ product }: Props) {
   const cart = useCart();
@@ -53,7 +52,6 @@ export function ProductPdpForm({ product }: Props) {
 
   const selected: ProductVariant | undefined = sizesForBanho.find((v) => v.size === size);
   const priceCents = selected?.priceCents ?? product.priceFromCents;
-  const installment = installmentValue(priceCents, INSTALLMENTS);
 
   function handleCalcFrete() {
     if (cep.replace(/\D/g, '').length === 8) {
@@ -87,8 +85,7 @@ export function ProductPdpForm({ product }: Props) {
       <div className="flex flex-col gap-1 border-b border-line pb-5">
         <div className="font-display text-h3">{formatMoney(priceCents)}</div>
         <div className="text-body-sm text-ink-60">
-          ou <span className="font-mono nums">{INSTALLMENTS}x</span> de{' '}
-          <span className="font-mono nums">{formatMoney(installment)}</span> sem juros
+          <InstallmentText priceCents={priceCents} />
         </div>
       </div>
 

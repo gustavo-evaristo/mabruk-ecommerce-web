@@ -3,7 +3,9 @@ import { Cormorant_Garamond, Manrope, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { QueryProvider } from '@/lib/providers/query-provider';
 import { CartProvider } from '@/lib/providers/cart-provider';
+import { StoreConfigProvider } from '@/lib/providers/store-config-provider';
 import { MiniCart } from '@/components/cart/mini-cart';
+import { getStoreConfig } from '@/lib/api/endpoints/store-config';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -36,11 +38,13 @@ export const metadata: Metadata = {
     'Mabruk Semijoias — coleção atemporal de anéis, brincos, colares e pulseiras. Banho ouro 18k, prata 925 e aço inoxidável com garantia.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const storeConfig = await getStoreConfig();
+
   return (
     <html
       lang="pt-BR"
@@ -48,10 +52,12 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-paper text-ink">
         <QueryProvider>
-          <CartProvider>
-            {children}
-            <MiniCart />
-          </CartProvider>
+          <StoreConfigProvider value={storeConfig}>
+            <CartProvider>
+              {children}
+              <MiniCart />
+            </CartProvider>
+          </StoreConfigProvider>
         </QueryProvider>
       </body>
     </html>

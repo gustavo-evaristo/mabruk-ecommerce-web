@@ -2,9 +2,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
 import type { Product } from '@/lib/api/types';
-import { formatMoney, installmentValue } from '@/lib/utils/format';
+import { formatMoney } from '@/lib/utils/format';
 import { Icon } from '@/components/ui/icon';
 import { Tag } from '@/components/ui/tag';
+import { InstallmentText } from '@/components/ui/installment-text';
 import { cn } from '@/lib/utils/cn';
 import { FavoriteButton } from './favorite-button';
 
@@ -17,8 +18,6 @@ interface ProductCardProps {
   /** Se este produto já está na lista de favoritos do usuário. */
   isFavorite?: boolean;
 }
-
-const INSTALLMENTS = 6;
 
 export function ProductCard({ product, badges, compact, isFavorite }: ProductCardProps) {
   const priceCents = product.priceFromCents;
@@ -91,11 +90,7 @@ export function ProductCard({ product, badges, compact, isFavorite }: ProductCar
         </div>
         {!compact && product.inStock && (
           <div className="text-body-xs text-ink-60">
-            ou <span className="font-mono nums">{INSTALLMENTS}x</span> de{' '}
-            <span className="font-mono nums">
-              {formatMoney(installmentValue(priceCents, INSTALLMENTS))}
-            </span>{' '}
-            sem juros
+            <InstallmentText priceCents={priceCents} />
           </div>
         )}
       </div>

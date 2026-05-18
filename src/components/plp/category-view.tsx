@@ -8,7 +8,8 @@ import type { Product } from '@/lib/api/types';
 import { Icon } from '@/components/ui/icon';
 import { Tag } from '@/components/ui/tag';
 import { ProductCard } from '@/components/product/product-card';
-import { formatMoney, installmentValue } from '@/lib/utils/format';
+import { formatMoney } from '@/lib/utils/format';
+import { InstallmentText } from '@/components/ui/installment-text';
 import { cn } from '@/lib/utils/cn';
 
 type View = 'grid' | 'list';
@@ -137,7 +138,6 @@ export function CategoryView({
 
 function ProductListItem({ product }: { product: Product }) {
   const hasRange = product.priceFromCents !== product.priceToCents;
-  const installment = installmentValue(product.priceFromCents, 6);
   const href = `/produto/${product.slug}` as Route;
   return (
     <Link
@@ -184,7 +184,7 @@ function ProductListItem({ product }: { product: Product }) {
         </div>
         {product.inStock && (
           <div className="mt-1 text-body-xs text-ink-60">
-            6x de <span className="font-mono nums">{formatMoney(installment)}</span> sem juros
+            <InstallmentText priceCents={product.priceFromCents} prefix="" />
           </div>
         )}
       </div>

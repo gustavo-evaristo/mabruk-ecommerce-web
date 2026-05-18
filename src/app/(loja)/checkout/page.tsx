@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useCart } from '@/lib/providers/cart-provider';
+import { useStoreConfig } from '@/lib/providers/store-config-provider';
 import { Container } from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
@@ -14,8 +15,6 @@ type Step = 1 | 2 | 3;
 type PaymentMethod = 'credit' | 'pix';
 
 const SHIPPING_PRICE_CENTS = 2990;
-const PIX_DISCOUNT = 0.1;
-const MAX_INSTALLMENTS = 6;
 
 const BANHO_LABEL: Record<string, string> = {
   OURO_18K: 'Ouro 18k',
@@ -26,12 +25,16 @@ const BANHO_LABEL: Record<string, string> = {
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotalCents, clear } = useCart();
+  const { maxInstallments, pixDiscountPercent } = useStoreConfig();
   const [step, setStep] = useState<Step>(1);
   const [payment, setPayment] = useState<PaymentMethod>('credit');
   const [installments, setInstallments] = useState(2);
 
   const beforeDiscount = subtotalCents + SHIPPING_PRICE_CENTS;
-  const discount = payment === 'pix' ? Math.round(beforeDiscount * PIX_DISCOUNT) : 0;
+  const discount =
+    payment === 'pix' && pixDiscountPercent > 0
+      ? Math.round((beforeDiscount * pixDiscountPercent) / 100)
+      : 0;
   const total = beforeDiscount - discount;
   const installmentVal = installmentValue(total, installments);
 
@@ -246,7 +249,9 @@ export default function CheckoutPage() {
                       />
                       <Icon name="creditCard" size={20} />
                       <span className="flex-1 text-body font-medium">Cartão de crédito</span>
-                      <span className="text-body-xs text-ink-60">Até 6x sem juros</span>
+                      <span className="text-body-xs text-ink-60">
+                        Até {maxInstallments}x sem juros
+                      </span>
                     </label>
                     {payment === 'credit' && (
                       <div className="flex flex-col gap-4 border-t border-line px-5 py-5">
@@ -268,7 +273,7 @@ export default function CheckoutPage() {
                               value={installments}
                               onChange={(e) => setInstallments(Number(e.target.value))}
                             >
-                              {Array.from({ length: MAX_INSTALLMENTS }).map((_, idx) => {
+                              {Array.from({ length: maxInstallments }).map((_, idx) => {
                                 const n = idx + 1;
                                 return (
                                   <option key={n} value={n}>
@@ -297,7 +302,11 @@ export default function CheckoutPage() {
                       />
                       <Icon name="pix" size={20} />
                       <span className="flex-1 text-body font-medium">PIX</span>
-                      <span className="text-body-xs text-ink-60">À vista · aprovação imediata</span>
+                      <span className="text-body-xs text-ink-60">
+                        {pixDiscountPercent > 0
+                          ? `${pixDiscountPercent}% de desconto à vista`
+                          : 'À vista · aprovação imediata'}
+                      </span>
                     </label>
                     {payment === 'pix' && (
                       <div className="border-t border-line px-5 py-4 text-body-xs leading-relaxed text-ink-60">

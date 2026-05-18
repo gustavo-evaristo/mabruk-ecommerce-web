@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import type { Route } from 'next';
 import { useCart } from '@/lib/providers/cart-provider';
+import { useStoreConfig } from '@/lib/providers/store-config-provider';
 import { Container } from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
@@ -17,20 +18,18 @@ const BANHO_LABEL: Record<string, string> = {
   ACO_INOX: 'Aço inoxidável',
 };
 
-const FREE_SHIPPING_THRESHOLD = 30000;
-const INSTALLMENTS = 6;
-
 export default function CartPage() {
   const { items, subtotalCents, totalItems, updateQuantity, removeItem } = useCart();
+  const { freeShippingThresholdCents, maxInstallments } = useStoreConfig();
   const [cep, setCep] = useState('');
   const [shippingChoice, setShippingChoice] = useState<'pac' | 'sedex' | 'expressa'>('sedex');
 
   const shippingPrice =
     shippingChoice === 'pac' ? 1890 : shippingChoice === 'sedex' ? 2990 : 4990;
   const grandTotal = subtotalCents + (items.length > 0 ? shippingPrice : 0);
-  const installment = installmentValue(grandTotal, INSTALLMENTS);
-  const progress = Math.min(100, (subtotalCents / FREE_SHIPPING_THRESHOLD) * 100);
-  const missing = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotalCents);
+  const installment = installmentValue(grandTotal, maxInstallments);
+  const progress = Math.min(100, (subtotalCents / freeShippingThresholdCents) * 100);
+  const missing = Math.max(0, freeShippingThresholdCents - subtotalCents);
 
   if (items.length === 0) {
     return (
@@ -76,7 +75,7 @@ export default function CartPage() {
             )}
           </span>
           <span className="font-mono nums text-body-xs text-ink-60">
-            {formatMoney(subtotalCents)} / {formatMoney(FREE_SHIPPING_THRESHOLD)}
+            {formatMoney(subtotalCents)} / {formatMoney(freeShippingThresholdCents)}
           </span>
         </div>
         <div className="h-[3px] bg-ink/10">
@@ -233,7 +232,7 @@ export default function CartPage() {
               <div className="text-right">
                 <div className="font-display text-h4">{formatMoney(grandTotal)}</div>
                 <div className="text-body-xs text-ink-60">
-                  ou <span className="font-mono nums">{INSTALLMENTS}x</span> de{' '}
+                  ou <span className="font-mono nums">{maxInstallments}x</span> de{' '}
                   <span className="font-mono nums">{formatMoney(installment)}</span> sem juros
                 </div>
               </div>

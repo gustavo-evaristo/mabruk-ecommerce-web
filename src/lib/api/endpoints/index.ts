@@ -4,6 +4,7 @@ export * from './collections';
 export * from './banners';
 export * from './tags';
 export * from './cep';
+export * from './store-config';
 export * from './cart';
 export * from './checkout';
 export * from './payments';
