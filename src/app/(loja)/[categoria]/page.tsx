@@ -4,9 +4,7 @@ import { listCollections } from '@/lib/api/endpoints/collections';
 import { listTags } from '@/lib/api/endpoints/tags';
 import { listProducts } from '@/lib/api/endpoints/products';
 import { Container } from '@/components/ui/container';
-import { FilterSidebar } from '@/components/plp/filter-sidebar';
-import { FilterDrawer } from '@/components/plp/filter-drawer';
-import { CategoryView } from '@/components/plp/category-view';
+import { PLPClient } from '@/components/plp/plp-client';
 
 interface Props {
   params: Promise<{ categoria: string }>;
@@ -21,7 +19,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function CategoryPage({ params }: Props) {
   const { categoria } = await params;
-  const [categories, collections, tags, result] = await Promise.all([
+  const [categories, collections, tags, initialResult] = await Promise.all([
     listCategories(),
     listCollections(),
     listTags(),
@@ -33,30 +31,12 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <Container className="grid gap-6 py-8 lg:grid-cols-[240px_1fr] lg:gap-12 lg:py-12">
-      {/* Mobile: drawer trigger */}
-      <div className="lg:hidden">
-        <FilterDrawer
-          categories={categories}
-          collections={collections}
-          tags={tags}
-          activeCategorySlug={cat.slug}
-        />
-      </div>
-
-      {/* Desktop: sidebar fixa */}
-      <div className="hidden lg:block">
-        <FilterSidebar
-          categories={categories}
-          collections={collections}
-          tags={tags}
-          activeCategorySlug={cat.slug}
-        />
-      </div>
-
-      <CategoryView
-        products={result.items}
-        total={result.total}
-        totalPages={result.totalPages}
+      <PLPClient
+        categorySlug={cat.slug}
+        categories={categories}
+        collections={collections}
+        tags={tags}
+        initialResult={initialResult}
       />
     </Container>
   );

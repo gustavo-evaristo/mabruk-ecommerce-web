@@ -1,10 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Icon } from '@/components/ui/icon';
 import { cn } from '@/lib/utils/cn';
 import { toggleFavoriteAction } from '@/lib/auth/customer-actions';
+import { queryKeys } from '@/lib/hooks';
 
 interface Props {
   productId: string;
@@ -22,26 +23,37 @@ export function FavoriteButton({
   variant = 'overlay',
 }: Props) {
   const router = useRouter();
-  const [isFav, setIsFav] = useState(initialIsFavorite);
-  const [pending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
-  function onClick(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const prev = isFav;
-    setIsFav(!prev); // optimistic
-    startTransition(async () => {
-      const res = await toggleFavoriteAction(productId, prev);
+  const mutation = useMutation({
+    mutationFn: async (currentIsFavorite: boolean) => {
+      return toggleFavoriteAction(productId, currentIsFavorite);
+    },
+    onMutate: async (currentIsFavorite) => {
+      // Optimistic flip
+      return { previousIsFavorite: currentIsFavorite, optimisticIsFavorite: !currentIsFavorite };
+    },
+    onSuccess: (res) => {
       if (res.authRequired) {
         router.push('/entrar');
         return;
       }
-      if (!res.ok) {
-        setIsFav(prev); // revert on failure
-      } else {
-        setIsFav(res.isFavorite);
-      }
-    });
+      // Invalida lista de favoritos pra refletir mudança
+      queryClient.invalidateQueries({ queryKey: queryKeys.favorites });
+    },
+  });
+
+  // Estado mostrado: optimistic durante mutation, depois resposta do server, depois prop inicial.
+  const isFav = mutation.isPending
+    ? !(mutation.variables ?? false)
+    : mutation.data && !mutation.data.authRequired
+      ? mutation.data.isFavorite
+      : initialIsFavorite;
+
+  function onClick(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    mutation.mutate(isFav);
   }
 
   const base =
@@ -53,7 +65,7 @@ export function FavoriteButton({
     <button
       type="button"
       onClick={onClick}
-      disabled={pending}
+      disabled={mutation.isPending}
       aria-label={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
       aria-pressed={isFav}
       className={cn(

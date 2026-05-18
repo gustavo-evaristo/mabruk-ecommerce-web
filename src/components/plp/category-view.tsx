@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
@@ -12,7 +12,7 @@ import { formatMoney, installmentValue } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 
 type View = 'grid' | 'list';
-type Sort = 'newest' | 'price_asc' | 'price_desc' | 'name_asc';
+export type Sort = 'newest' | 'price_asc' | 'price_desc' | 'name_asc';
 
 const SORT_OPTIONS: { value: Sort; label: string }[] = [
   { value: 'newest', label: 'Novidades' },
@@ -25,28 +25,20 @@ interface Props {
   products: Product[];
   total: number;
   totalPages: number;
-  /** chips de filtros já aplicados (vem da query) — opcional */
-  appliedFilters?: string[];
+  sort?: Sort;
+  onSortChange?: (sort: Sort) => void;
+  isFetching?: boolean;
 }
 
-export function CategoryView({ products, total, totalPages, appliedFilters = [] }: Props) {
+export function CategoryView({
+  products,
+  total,
+  totalPages,
+  sort = 'newest',
+  onSortChange,
+  isFetching,
+}: Props) {
   const [view, setView] = useState<View>('grid');
-  const [sort, setSort] = useState<Sort>('newest');
-  const [chips, setChips] = useState<string[]>(appliedFilters);
-
-  const sorted = useMemo(() => {
-    const list = [...products];
-    switch (sort) {
-      case 'price_asc':
-        return list.sort((a, b) => a.priceFromCents - b.priceFromCents);
-      case 'price_desc':
-        return list.sort((a, b) => b.priceFromCents - a.priceFromCents);
-      case 'name_asc':
-        return list.sort((a, b) => a.name.localeCompare(b.name));
-      default:
-        return list;
-    }
-  }, [products, sort]);
 
   return (
     <>
@@ -56,7 +48,7 @@ export function CategoryView({ products, total, totalPages, appliedFilters = [] 
           <span className="text-ink-60">Ordenar</span>
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value as Sort)}
+            onChange={(e) => onSortChange?.(e.target.value as Sort)}
             className="!w-auto !border-0 !p-0 text-body-sm"
           >
             {SORT_OPTIONS.map((o) => (
@@ -92,36 +84,29 @@ export function CategoryView({ products, total, totalPages, appliedFilters = [] 
         </div>
       </div>
 
-      {/* Chips de filtros aplicados */}
-      {chips.length > 0 && (
-        <div className="mb-6 flex flex-wrap gap-2">
-          {chips.map((label) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => setChips((prev) => prev.filter((x) => x !== label))}
-              className="inline-flex cursor-pointer items-center gap-2 border border-line px-3 py-1.5 text-body-xs hover:border-ink"
-            >
-              {label}
-              <Icon name="close" size={11} />
-            </button>
-          ))}
-        </div>
-      )}
-
-      {sorted.length === 0 ? (
+      {products.length === 0 ? (
         <p className="py-24 text-center text-body-md text-ink-60">
-          Nenhuma peça encontrada nesta categoria.
+          {isFetching ? 'Buscando…' : 'Nenhuma peça encontrada nesta categoria.'}
         </p>
       ) : view === 'grid' ? (
-        <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.map((p) => (
+        <div
+          className={cn(
+            'grid grid-cols-1 gap-x-8 gap-y-12 transition-opacity sm:grid-cols-2 lg:grid-cols-3',
+            isFetching && 'opacity-60',
+          )}
+        >
+          {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-line">
-          {sorted.map((p) => (
+        <div
+          className={cn(
+            'flex flex-col divide-y divide-line transition-opacity',
+            isFetching && 'opacity-60',
+          )}
+        >
+          {products.map((p) => (
             <ProductListItem key={p.id} product={p} />
           ))}
         </div>

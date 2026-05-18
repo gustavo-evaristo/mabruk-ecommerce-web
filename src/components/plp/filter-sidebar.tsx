@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import type { Category, Collection, Tag } from '@/lib/api/types';
+import Link from 'next/link';
+import type { Route } from 'next';
+import type { Banho, Category, Collection, Tag } from '@/lib/api/types';
 import { Icon } from '@/components/ui/icon';
+import type { PLPFilters } from './plp-client';
 
 interface FilterGroupProps {
   title: string;
@@ -28,28 +31,28 @@ function FilterGroup({ title, children, defaultOpen = true }: FilterGroupProps) 
 }
 
 interface CheckProps {
-  count?: number;
   checked?: boolean;
   onChange?: (next: boolean) => void;
   children: React.ReactNode;
 }
 
-function Check({ count, checked, onChange, children }: CheckProps) {
+function Check({ checked, onChange, children }: CheckProps) {
   return (
     <label className="flex cursor-pointer items-center gap-2.5 text-body text-ink-80">
       <span
-        className={`grid size-3.5 place-items-center border ${checked ? 'border-ink bg-ink' : 'border-ink-20'}`}
+        className={`grid size-3.5 place-items-center border ${
+          checked ? 'border-ink bg-ink' : 'border-ink-20'
+        }`}
       >
         {checked && <Icon name="check" size={10} stroke={2} className="text-cream" />}
       </span>
       <input
         type="checkbox"
         className="sr-only"
-        checked={checked}
+        checked={!!checked}
         onChange={(e) => onChange?.(e.target.checked)}
       />
-      <span className="flex-1">{children}</span>
-      {count !== undefined && <span className="font-mono nums text-body-xs text-ink-40">{count}</span>}
+      <span>{children}</span>
     </label>
   );
 }
@@ -59,70 +62,116 @@ interface Props {
   collections: Collection[];
   tags: Tag[];
   activeCategorySlug?: string;
+  filters: PLPFilters;
+  onFiltersChange: (next: PLPFilters) => void;
 }
 
-const BANHOS = [
-  { value: 'OURO_18K' as const, label: 'Ouro 18k' },
-  { value: 'PRATA_925' as const, label: 'Prata 925' },
-  { value: 'ACO_INOX' as const, label: 'Aço inoxidável' },
+const BANHOS: { value: Banho; label: string }[] = [
+  { value: 'OURO_18K', label: 'Ouro 18k' },
+  { value: 'PRATA_925', label: 'Prata 925' },
+  { value: 'ACO_INOX', label: 'Aço inoxidável' },
 ];
 
-export function FilterSidebar({ categories, collections, tags, activeCategorySlug }: Props) {
-  const [banhos, setBanhos] = useState<Set<string>>(new Set());
+export function FilterSidebar({
+  categories,
+  collections,
+  tags,
+  activeCategorySlug,
+  filters,
+  onFiltersChange,
+}: Props) {
+  function toggleBanho(banho: Banho) {
+    const next = new Set(filters.banhos);
+    if (next.has(banho)) next.delete(banho);
+    else next.add(banho);
+    onFiltersChange({ ...filters, banhos: next });
+  }
+
+  function clear() {
+    onFiltersChange({
+      banhos: new Set(),
+      collectionSlug: null,
+      tagSlug: null,
+      inStock: false,
+      sort: 'newest',
+    });
+  }
 
   return (
     <aside className="flex flex-col">
       <FilterGroup title="Categoria">
         {categories.map((c) => (
-          <Check key={c.id} checked={c.slug === activeCategorySlug}>
+          <Link
+            key={c.id}
+            href={`/${c.slug}` as Route}
+            className={`text-body text-ink-80 ${
+              c.slug === activeCategorySlug ? 'font-medium text-ink' : 'hover:text-ink'
+            }`}
+          >
             {c.name}
-          </Check>
+          </Link>
         ))}
       </FilterGroup>
 
-      <FilterGroup title="Coleção">
-        {collections.map((col) => (
-          <Check key={col.id}>{col.name}</Check>
-        ))}
-      </FilterGroup>
+      {collections.length > 0 && (
+        <FilterGroup title="Coleção">
+          {collections.map((col) => (
+            <Check
+              key={col.id}
+              checked={filters.collectionSlug === col.slug}
+              onChange={(next) =>
+                onFiltersChange({
+                  ...filters,
+                  collectionSlug: next ? col.slug : null,
+                })
+              }
+            >
+              {col.name}
+            </Check>
+          ))}
+        </FilterGroup>
+      )}
 
       <FilterGroup title="Banho">
         {BANHOS.map((b) => (
           <Check
             key={b.value}
-            checked={banhos.has(b.value)}
-            onChange={(next) => {
-              const copy = new Set(banhos);
-              if (next) copy.add(b.value);
-              else copy.delete(b.value);
-              setBanhos(copy);
-            }}
+            checked={filters.banhos.has(b.value)}
+            onChange={() => toggleBanho(b.value)}
           >
             {b.label}
           </Check>
         ))}
       </FilterGroup>
 
-      <FilterGroup title="Preço">
-        <div className="flex gap-2">
-          <input type="text" placeholder="R$ 0" />
-          <input type="text" placeholder="R$ 500" />
-        </div>
-      </FilterGroup>
-
       <FilterGroup title="Disponibilidade">
-        <Check checked>Em estoque</Check>
-        <Check>Pré-venda</Check>
+        <Check
+          checked={filters.inStock}
+          onChange={(next) => onFiltersChange({ ...filters, inStock: next })}
+        >
+          Em estoque
+        </Check>
       </FilterGroup>
 
-      <FilterGroup title="Tags" defaultOpen={false}>
-        {tags.map((t) => (
-          <Check key={t.id}>{t.name}</Check>
-        ))}
-      </FilterGroup>
+      {tags.length > 0 && (
+        <FilterGroup title="Tags" defaultOpen={false}>
+          {tags.map((t) => (
+            <Check
+              key={t.id}
+              checked={filters.tagSlug === t.slug}
+              onChange={(next) =>
+                onFiltersChange({ ...filters, tagSlug: next ? t.slug : null })
+              }
+            >
+              {t.name}
+            </Check>
+          ))}
+        </FilterGroup>
+      )}
 
       <button
         type="button"
+        onClick={clear}
         className="mt-5 self-start text-eyebrow font-medium uppercase tracking-eyebrow text-ink-60 underline"
       >
         Limpar filtros

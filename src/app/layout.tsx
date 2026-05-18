@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, Manrope, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { QueryProvider } from '@/lib/providers/query-provider';
 import { CartProvider } from '@/lib/providers/cart-provider';
 import { MiniCart } from '@/components/cart/mini-cart';
 
@@ -46,10 +47,12 @@ export default function RootLayout({
       className={`${cormorant.variable} ${manrope.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-paper text-ink">
-        <CartProvider>
-          {children}
-          <MiniCart />
-        </CartProvider>
+        <QueryProvider>
+          <CartProvider>
+            {children}
+            <MiniCart />
+          </CartProvider>
+        </QueryProvider>
       </body>
     </html>
   );

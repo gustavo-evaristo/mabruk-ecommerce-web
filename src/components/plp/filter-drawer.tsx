@@ -6,15 +6,25 @@ import { FilterSidebar } from './filter-sidebar';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
+import type { PLPFilters } from './plp-client';
 
 interface Props {
   categories: Category[];
   collections: Collection[];
   tags: Tag[];
   activeCategorySlug?: string;
+  filters: PLPFilters;
+  onFiltersChange: (next: PLPFilters) => void;
 }
 
-export function FilterDrawer({ categories, collections, tags, activeCategorySlug }: Props) {
+export function FilterDrawer({
+  categories,
+  collections,
+  tags,
+  activeCategorySlug,
+  filters,
+  onFiltersChange,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -27,7 +37,6 @@ export function FilterDrawer({ categories, collections, tags, activeCategorySlug
 
   return (
     <>
-      {/* Trigger (apenas mobile) */}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -40,7 +49,6 @@ export function FilterDrawer({ categories, collections, tags, activeCategorySlug
         <Icon name="chevronRight" size={12} />
       </button>
 
-      {/* Backdrop */}
       <div
         onClick={() => setOpen(false)}
         aria-hidden
@@ -50,7 +58,6 @@ export function FilterDrawer({ categories, collections, tags, activeCategorySlug
         )}
       />
 
-      {/* Drawer */}
       <aside
         aria-hidden={!open}
         className={cn(
@@ -76,14 +83,13 @@ export function FilterDrawer({ categories, collections, tags, activeCategorySlug
             collections={collections}
             tags={tags}
             activeCategorySlug={activeCategorySlug}
+            filters={filters}
+            onFiltersChange={onFiltersChange}
           />
         </div>
 
         <footer className="flex items-center gap-3 border-t border-line px-5 py-4">
-          <Button variant="secondary" onClick={() => setOpen(false)} className="flex-1">
-            Limpar
-          </Button>
-          <Button variant="primary" onClick={() => setOpen(false)} className="flex-1">
+          <Button variant="primary" onClick={() => setOpen(false)} fullWidth>
             Aplicar
           </Button>
         </footer>

@@ -64,18 +64,10 @@ export function ProductPdpForm({ product }: Props) {
     }
   }
 
-  function handleAddToCart() {
+  async function handleAddToCart() {
     if (!selected) return;
-    cart.addItem({
+    await cart.addItem({
       variantId: selected.id,
-      productId: product.id,
-      productSlug: product.slug,
-      productName: product.name,
-      banho: selected.banho,
-      size: selected.size,
-      sku: selected.sku,
-      unitPriceCents: selected.priceCents,
-      imageUrl: product.image?.url ?? null,
       quantity: qty,
     });
   }

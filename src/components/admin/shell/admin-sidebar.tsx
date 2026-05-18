@@ -27,23 +27,39 @@ interface NavItem {
   count?: number;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { id: 'dashboard', icon: 'chart', label: 'Visão geral', href: '/admin' as Route, match: (p) => p === '/admin' },
-  { id: 'orders', icon: 'pkg', label: 'Pedidos', href: '/admin/pedidos' as Route, count: 12 },
-  { id: 'products', icon: 'box', label: 'Produtos', href: '/admin/produtos' as Route },
-  { id: 'customers', icon: 'users', label: 'Clientes', href: '/admin/clientes' as Route },
-  { id: 'promotions', icon: 'tag', label: 'Promoções', href: '/admin/promocoes' as Route },
-];
+function buildNavItems(badges: SidebarBadges) {
+  const nav: NavItem[] = [
+    { id: 'dashboard', icon: 'chart', label: 'Visão geral', href: '/admin' as Route, match: (p) => p === '/admin' },
+    {
+      id: 'orders',
+      icon: 'pkg',
+      label: 'Pedidos',
+      href: '/admin/pedidos' as Route,
+      count: badges.orders || undefined,
+    },
+    { id: 'products', icon: 'box', label: 'Produtos', href: '/admin/produtos' as Route },
+    { id: 'customers', icon: 'users', label: 'Clientes', href: '/admin/clientes' as Route },
+    { id: 'promotions', icon: 'tag', label: 'Promoções', href: '/admin/promocoes' as Route },
+  ];
 
-const CONTENT_ITEMS: NavItem[] = [
-  { id: 'collections', icon: 'grid', label: 'Coleções', href: '/admin/colecoes' as Route },
-  { id: 'banners', icon: 'eye', label: 'Banners & landing', href: '/admin/banners' as Route },
-  { id: 'reviews', icon: 'star', label: 'Avaliações', href: '/admin/avaliacoes' as Route, count: 4 },
-];
+  const content: NavItem[] = [
+    { id: 'collections', icon: 'grid', label: 'Coleções', href: '/admin/colecoes' as Route },
+    { id: 'banners', icon: 'eye', label: 'Banners & landing', href: '/admin/banners' as Route },
+    {
+      id: 'reviews',
+      icon: 'star',
+      label: 'Avaliações',
+      href: '/admin/avaliacoes' as Route,
+      count: badges.reviews || undefined,
+    },
+  ];
 
-const SYSTEM_ITEMS: NavItem[] = [
-  { id: 'settings', icon: 'settings', label: 'Configurações', href: '/admin/configuracoes' as Route },
-];
+  const system: NavItem[] = [
+    { id: 'settings', icon: 'settings', label: 'Configurações', href: '/admin/configuracoes' as Route },
+  ];
+
+  return { nav, content, system };
+}
 
 function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
@@ -76,12 +92,19 @@ function GroupLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-interface AdminSidebarProps {
-  admin: AdminMe;
+export interface SidebarBadges {
+  orders: number;
+  reviews: number;
 }
 
-export function AdminSidebar({ admin }: AdminSidebarProps) {
+interface AdminSidebarProps {
+  admin: AdminMe;
+  badges: SidebarBadges;
+}
+
+export function AdminSidebar({ admin, badges }: AdminSidebarProps) {
   const pathname = usePathname() ?? '/admin';
+  const { nav: NAV_ITEMS, content: CONTENT_ITEMS, system: SYSTEM_ITEMS } = buildNavItems(badges);
 
   const isActive = (item: NavItem) => {
     if (item.match) return item.match(pathname);
