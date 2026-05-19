@@ -6,7 +6,6 @@ import { FilterSidebar } from './filter-sidebar';
 import { FilterDrawer } from './filter-drawer';
 import { CategoryView } from './category-view';
 import type {
-  Banho,
   Category,
   Collection,
   ProductListFilters,
@@ -23,7 +22,8 @@ interface Props {
 }
 
 export interface PLPFilters {
-  banhos: Set<Banho>;
+  /** Mapa de filtros por atributo: { 'cor': Set(['azul','vermelho']), 'banho': Set(['ouro-18k']) } */
+  attributes: Record<string, Set<string>>;
   collectionSlug: string | null;
   tagSlug: string | null;
   inStock: boolean;
@@ -38,26 +38,30 @@ export function PLPClient({
   initialResult,
 }: Props) {
   const [filters, setFilters] = useState<PLPFilters>({
-    banhos: new Set(),
+    attributes: {},
     collectionSlug: null,
     tagSlug: null,
     inStock: false,
     sort: 'newest',
   });
 
-  const banhosArr = Array.from(filters.banhos);
+  const attributeFilters: Record<string, string[]> = {};
+  for (const [slug, values] of Object.entries(filters.attributes)) {
+    if (values.size > 0) attributeFilters[slug] = Array.from(values);
+  }
+
   const query: ProductListFilters = {
     category: categorySlug,
     collection: filters.collectionSlug ?? undefined,
     tag: filters.tagSlug ?? undefined,
-    banho: banhosArr.length === 1 ? banhosArr[0] : undefined,
+    attributeFilters: Object.keys(attributeFilters).length ? attributeFilters : undefined,
     inStock: filters.inStock || undefined,
     sort: filters.sort,
     pageSize: 30,
   };
 
   const isDefault =
-    filters.banhos.size === 0 &&
+    Object.keys(attributeFilters).length === 0 &&
     !filters.collectionSlug &&
     !filters.tagSlug &&
     !filters.inStock &&
@@ -78,6 +82,7 @@ export function PLPClient({
           collections={collections}
           tags={tags}
           activeCategorySlug={categorySlug}
+          availableAttributes={result.availableAttributes}
           filters={filters}
           onFiltersChange={setFilters}
         />
@@ -89,6 +94,7 @@ export function PLPClient({
           collections={collections}
           tags={tags}
           activeCategorySlug={categorySlug}
+          availableAttributes={result.availableAttributes}
           filters={filters}
           onFiltersChange={setFilters}
         />

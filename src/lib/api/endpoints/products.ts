@@ -9,20 +9,25 @@ import type {
 export async function listProducts(
   filters: ProductListFilters = {},
 ): Promise<ProductListResult> {
+  const query: Record<string, string | number | boolean | null | undefined> = {
+    search: filters.search,
+    category: filters.category,
+    collection: filters.collection,
+    tag: filters.tag,
+    minPriceCents: filters.minPriceCents,
+    maxPriceCents: filters.maxPriceCents,
+    inStock: filters.inStock,
+    sort: filters.sort,
+    page: filters.page,
+    pageSize: filters.pageSize,
+  };
+  if (filters.attributeFilters) {
+    for (const [slug, values] of Object.entries(filters.attributeFilters)) {
+      if (values.length) query[`attr_${slug}`] = values.join(',');
+    }
+  }
   return apiFetch<ProductListResult>('/b2c/products', {
-    query: {
-      search: filters.search,
-      category: filters.category,
-      collection: filters.collection,
-      tag: filters.tag,
-      banho: filters.banho,
-      minPriceCents: filters.minPriceCents,
-      maxPriceCents: filters.maxPriceCents,
-      inStock: filters.inStock,
-      sort: filters.sort,
-      page: filters.page,
-      pageSize: filters.pageSize,
-    },
+    query,
     next: { revalidate: 60 },
   });
 }

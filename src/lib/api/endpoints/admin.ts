@@ -156,6 +156,38 @@ export async function deleteAdminCategory(token: string, id: string): Promise<vo
   await apiFetch(`/b2b/categories/${id}`, { method: 'DELETE', token });
 }
 
+// ----- Tags -----
+
+export interface AdminTag {
+  id: string;
+  slug: string;
+  name: string;
+}
+
+export async function listAdminTags(token: string): Promise<AdminTag[]> {
+  const res = await apiFetch<{ items: AdminTag[] }>('/b2b/tags', { token });
+  return res.items;
+}
+
+export async function createAdminTag(
+  token: string,
+  body: { name: string; slug?: string },
+): Promise<{ id: string; slug: string }> {
+  return apiFetch('/b2b/tags', { method: 'POST', body, token });
+}
+
+export async function updateAdminTag(
+  token: string,
+  id: string,
+  body: Partial<{ name: string; slug: string }>,
+): Promise<{ id: string; slug: string }> {
+  return apiFetch(`/b2b/tags/${id}`, { method: 'PATCH', body, token });
+}
+
+export async function deleteAdminTag(token: string, id: string): Promise<void> {
+  await apiFetch(`/b2b/tags/${id}`, { method: 'DELETE', token });
+}
+
 // ----- Collections -----
 
 export interface AdminCollection {
@@ -267,7 +299,7 @@ export interface AdminProductSummary {
   priceFromCents: number;
   totalStock: number;
   category: { slug: string; name: string };
-  imageUrl: string | null;
+  image: { url: string; alt: string | null } | null;
 }
 
 export async function listAdminProducts(
@@ -298,4 +330,108 @@ export async function updateAdminProduct(
 
 export async function deleteAdminProduct(token: string, id: string): Promise<void> {
   await apiFetch(`/b2b/products/${id}`, { method: 'DELETE', token });
+}
+
+// ---------------- Atributos ----------------
+
+export interface AdminAttribute {
+  id: string;
+  slug: string;
+  name: string;
+  type: 'SELECT' | 'COLOR';
+  order: number;
+  values: AdminAttributeValue[];
+}
+
+export interface AdminAttributeValue {
+  id: string;
+  attributeId: string;
+  slug: string;
+  name: string;
+  hex: string | null;
+  order: number;
+}
+
+export async function listAdminAttributes(token: string): Promise<AdminAttribute[]> {
+  const res = await apiFetch<{ items: AdminAttribute[] }>('/b2b/attributes', { token });
+  return res.items;
+}
+
+export async function createAdminAttribute(
+  token: string,
+  body: {
+    name: string;
+    slug?: string;
+    type?: 'SELECT' | 'COLOR';
+    valueDrafts?: { name: string; slug?: string; hex?: string }[];
+  },
+): Promise<{ id: string; slug: string }> {
+  return apiFetch('/b2b/attributes', { method: 'POST', body, token });
+}
+
+export async function updateAdminAttribute(
+  token: string,
+  id: string,
+  body: Partial<{ name: string; slug: string; type: 'SELECT' | 'COLOR'; order: number }>,
+): Promise<AdminAttribute> {
+  return apiFetch(`/b2b/attributes/${id}`, { method: 'PATCH', body, token });
+}
+
+export async function deleteAdminAttribute(token: string, id: string): Promise<void> {
+  await apiFetch(`/b2b/attributes/${id}`, { method: 'DELETE', token });
+}
+
+export async function createAdminAttributeValue(
+  token: string,
+  attributeId: string,
+  body: { name: string; slug?: string; hex?: string; order?: number },
+): Promise<AdminAttributeValue> {
+  return apiFetch(`/b2b/attributes/${attributeId}/values`, { method: 'POST', body, token });
+}
+
+export async function updateAdminAttributeValue(
+  token: string,
+  attributeId: string,
+  valueId: string,
+  body: Partial<{ name: string; slug: string; hex: string; order: number }>,
+): Promise<AdminAttributeValue> {
+  return apiFetch(`/b2b/attributes/${attributeId}/values/${valueId}`, {
+    method: 'PATCH',
+    body,
+    token,
+  });
+}
+
+export async function deleteAdminAttributeValue(
+  token: string,
+  attributeId: string,
+  valueId: string,
+): Promise<void> {
+  await apiFetch(`/b2b/attributes/${attributeId}/values/${valueId}`, { method: 'DELETE', token });
+}
+
+export async function generateAdminProductVariants(
+  token: string,
+  productId: string,
+  body: { defaultPriceCents?: number; defaultStock?: number; skuPrefix?: string },
+): Promise<{ created: number; skipped: number }> {
+  return apiFetch(`/b2b/products/${productId}/variants/generate`, {
+    method: 'POST',
+    body,
+    token,
+  });
+}
+
+export async function listAdminTrashProducts(
+  token: string,
+): Promise<{ items: AdminProductSummary[] }> {
+  return apiFetch('/b2b/products/trash', { token });
+}
+
+export async function restoreAdminProduct(token: string, id: string): Promise<void> {
+  await apiFetch(`/b2b/products/${id}/restore`, { method: 'POST', token });
+}
+
+export async function hardDeleteAdminProduct(token: string, id: string): Promise<void> {
+  await apiFetch(`/b2b/products/${id}/hard`, { method: 'DELETE', token });
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Route } from 'next';
-import type { Banho, Category, Collection, Tag } from '@/lib/api/types';
+import type { AvailableAttribute, Category, Collection, Tag } from '@/lib/api/types';
 import { Icon } from '@/components/ui/icon';
 import type { PLPFilters } from './plp-client';
 
@@ -62,34 +62,34 @@ interface Props {
   collections: Collection[];
   tags: Tag[];
   activeCategorySlug?: string;
+  availableAttributes: AvailableAttribute[];
   filters: PLPFilters;
   onFiltersChange: (next: PLPFilters) => void;
 }
-
-const BANHOS: { value: Banho; label: string }[] = [
-  { value: 'OURO_18K', label: 'Ouro 18k' },
-  { value: 'PRATA_925', label: 'Prata 925' },
-  { value: 'ACO_INOX', label: 'Aço inoxidável' },
-];
 
 export function FilterSidebar({
   categories,
   collections,
   tags,
   activeCategorySlug,
+  availableAttributes,
   filters,
   onFiltersChange,
 }: Props) {
-  function toggleBanho(banho: Banho) {
-    const next = new Set(filters.banhos);
-    if (next.has(banho)) next.delete(banho);
-    else next.add(banho);
-    onFiltersChange({ ...filters, banhos: next });
+  function toggleAttributeValue(attrSlug: string, valueSlug: string) {
+    const current = filters.attributes[attrSlug] ?? new Set<string>();
+    const next = new Set(current);
+    if (next.has(valueSlug)) next.delete(valueSlug);
+    else next.add(valueSlug);
+    const nextAttrs = { ...filters.attributes };
+    if (next.size === 0) delete nextAttrs[attrSlug];
+    else nextAttrs[attrSlug] = next;
+    onFiltersChange({ ...filters, attributes: nextAttrs });
   }
 
   function clear() {
     onFiltersChange({
-      banhos: new Set(),
+      attributes: {},
       collectionSlug: null,
       tagSlug: null,
       inStock: false,
@@ -132,17 +132,53 @@ export function FilterSidebar({
         </FilterGroup>
       )}
 
-      <FilterGroup title="Banho">
-        {BANHOS.map((b) => (
-          <Check
-            key={b.value}
-            checked={filters.banhos.has(b.value)}
-            onChange={() => toggleBanho(b.value)}
-          >
-            {b.label}
-          </Check>
-        ))}
-      </FilterGroup>
+      {availableAttributes.map((attr) => (
+        <FilterGroup key={attr.slug} title={attr.name}>
+          {attr.type === 'COLOR' ? (
+            <div className="flex flex-wrap gap-2">
+              {attr.values.map((v) => {
+                const checked = filters.attributes[attr.slug]?.has(v.slug) ?? false;
+                return (
+                  <button
+                    key={v.slug}
+                    type="button"
+                    onClick={() => toggleAttributeValue(attr.slug, v.slug)}
+                    title={`${v.name} (${v.count})`}
+                    className={`relative grid size-8 place-items-center rounded-full border-2 ${
+                      checked ? 'border-ink' : 'border-line hover:border-ink-60'
+                    }`}
+                    aria-label={v.name}
+                  >
+                    <span
+                      className="size-6 rounded-full"
+                      style={{ backgroundColor: v.hex ?? '#ccc' }}
+                    />
+                    {checked && (
+                      <span className="absolute inset-0 grid place-items-center text-paper mix-blend-difference">
+                        <Icon name="check" size={11} stroke={2} />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            attr.values.map((v) => {
+              const checked = filters.attributes[attr.slug]?.has(v.slug) ?? false;
+              return (
+                <Check
+                  key={v.slug}
+                  checked={checked}
+                  onChange={() => toggleAttributeValue(attr.slug, v.slug)}
+                >
+                  {v.name}{' '}
+                  <span className="text-ink-40">({v.count})</span>
+                </Check>
+              );
+            })
+          )}
+        </FilterGroup>
+      ))}
 
       <FilterGroup title="Disponibilidade">
         <Check

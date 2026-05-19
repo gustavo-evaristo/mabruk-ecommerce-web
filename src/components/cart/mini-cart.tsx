@@ -9,11 +9,9 @@ import { Icon } from '@/components/ui/icon';
 import { formatMoney } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 
-const BANHO_LABEL: Record<string, string> = {
-  OURO_18K: 'Ouro 18k',
-  PRATA_925: 'Prata 925',
-  ACO_INOX: 'Aço inoxidável',
-};
+function fmtAttrs(attrs: { name: string; value: string }[]): string {
+  return attrs.map((a) => `${a.name}: ${a.value}`).join(' · ');
+}
 
 export function MiniCart() {
   const { items, isOpen, close, subtotalCents, removeItem } = useCart();
@@ -93,9 +91,11 @@ export function MiniCart() {
                     >
                       {item.productName}
                     </Link>
-                    <div className="mt-1 text-body-xs text-ink-60">
-                      {BANHO_LABEL[item.banho] ?? item.banho} · {item.size}
-                    </div>
+                    {item.attributes.length > 0 && (
+                      <div className="mt-1 text-body-xs text-ink-60">
+                        {fmtAttrs(item.attributes)}
+                      </div>
+                    )}
                     <div className="mt-auto flex items-center justify-between">
                       <span className="font-mono nums text-body-sm">
                         {item.quantity} × {formatMoney(item.unitPriceCents)}

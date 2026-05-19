@@ -10,18 +10,50 @@
 // Catálogo — Product
 // ============================================================
 
-export type Banho = 'OURO_18K' | 'PRATA_925' | 'ACO_INOX';
 export type ProductStatus = 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+export type ProductType = 'SIMPLE' | 'VARIABLE';
+export type AttributeType = 'SELECT' | 'COLOR';
+
+/** Valor de atributo aplicado a uma variante (ex: variante = "Ouro 18k" + "Azul"). */
+export interface VariantAttributeValue {
+  attributeId: string;
+  attributeSlug: string;
+  attributeName: string;
+  attributeType: AttributeType;
+  valueId: string;
+  valueSlug: string;
+  valueName: string;
+  valueHex: string | null;
+}
 
 export interface ProductVariant {
   id: string;
   sku: string;
-  banho: Banho;
-  size: string;
   priceCents: number;
   stock: number;
   inStock: boolean;
   isActive: boolean;
+  weightInGrams: number | null;
+  isDefault: boolean;
+  attributeValues: VariantAttributeValue[];
+}
+
+/** Atributo cadastrado num produto VARIABLE (Cor, Banho, Tamanho…). */
+export interface ProductAttributeDefinition {
+  id: string;
+  slug: string;
+  name: string;
+  type: AttributeType;
+  order: number;
+  values: { id: string; slug: string; name: string; hex: string | null; order: number }[];
+}
+
+/** Faceta dinâmica retornada pela PLP. */
+export interface AvailableAttribute {
+  slug: string;
+  name: string;
+  type: AttributeType;
+  values: { slug: string; name: string; hex: string | null; count: number }[];
 }
 
 export interface ProductImage {
@@ -49,6 +81,7 @@ export interface Product {
   name: string;
   description: string | null;
   status: ProductStatus;
+  type: ProductType;
   basePriceCents: number;
   priceFromCents: number;
   priceToCents: number;
@@ -61,6 +94,8 @@ export interface Product {
 }
 
 export interface ProductDetails extends Product {
+  /** Definição dos atributos que esse produto VARIABLE usa (em ordem). Vazio em SIMPLE. */
+  attributes: ProductAttributeDefinition[];
   weightInGrams: number | null;
   dimensions: { length: number | null; width: number | null; height: number | null } | null;
   seoTitle: string | null;
@@ -70,6 +105,7 @@ export interface ProductDetails extends Product {
 
 export interface ProductListResult {
   items: Product[];
+  availableAttributes: AvailableAttribute[];
   total: number;
   page: number;
   pageSize: number;
@@ -81,7 +117,8 @@ export interface ProductListFilters {
   category?: string;
   collection?: string;
   tag?: string;
-  banho?: Banho;
+  /** Filtros por atributo: { 'cor': ['azul','vermelho'], 'banho': ['ouro-18k'] } */
+  attributeFilters?: Record<string, string[]>;
   minPriceCents?: number;
   maxPriceCents?: number;
   inStock?: boolean;
@@ -140,8 +177,8 @@ export interface CartLine {
   productId: string;
   productSlug: string;
   productName: string;
-  banho: Banho;
-  size: string;
+  /** Atributos da variante. Vazio em produto SIMPLE. */
+  attributes: { name: string; value: string }[];
   sku: string;
   unitPriceCents: number;
   quantity: number;
@@ -253,9 +290,8 @@ export interface OrderItem {
     name: string;
     slug: string;
     imageUrl: string | null;
-    banho: Banho;
-    size: string;
     sku: string;
+    attributes: { name: string; value: string }[];
   };
   unitPriceCents: number;
   quantity: number;

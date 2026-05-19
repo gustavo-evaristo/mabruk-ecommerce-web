@@ -38,6 +38,9 @@ function buildNavItems(badges: SidebarBadges) {
       count: badges.orders || undefined,
     },
     { id: 'products', icon: 'box', label: 'Produtos', href: '/admin/produtos' as Route },
+    { id: 'categories', icon: 'list', label: 'Categorias', href: '/admin/categorias' as Route },
+    { id: 'attributes', icon: 'filter', label: 'Atributos', href: '/admin/atributos' as Route },
+    { id: 'tags', icon: 'tag', label: 'Tags', href: '/admin/tags' as Route },
     { id: 'customers', icon: 'users', label: 'Clientes', href: '/admin/clientes' as Route },
     { id: 'promotions', icon: 'tag', label: 'Promoções', href: '/admin/promocoes' as Route },
   ];

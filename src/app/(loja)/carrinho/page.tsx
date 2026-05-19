@@ -12,11 +12,10 @@ import { Icon } from '@/components/ui/icon';
 import { QtyStepper } from '@/components/ui/qty-stepper';
 import { formatMoney, installmentValue } from '@/lib/utils/format';
 
-const BANHO_LABEL: Record<string, string> = {
-  OURO_18K: 'Ouro 18k',
-  PRATA_925: 'Prata 925',
-  ACO_INOX: 'Aço inoxidável',
-};
+function formatAttributes(attrs: { name: string; value: string }[]): string {
+  if (!attrs?.length) return '';
+  return attrs.map((a) => `${a.name}: ${a.value}`).join(' · ');
+}
 
 export default function CartPage() {
   const { items, subtotalCents, totalItems, updateQuantity, removeItem } = useCart();
@@ -112,9 +111,11 @@ export default function CartPage() {
                 >
                   {item.productName}
                 </Link>
-                <div className="text-body-xs text-ink-60">
-                  {BANHO_LABEL[item.banho] ?? item.banho} · {item.size}
-                </div>
+                {item.attributes.length > 0 && (
+                  <div className="text-body-xs text-ink-60">
+                    {formatAttributes(item.attributes)}
+                  </div>
+                )}
                 <div className="mt-1 font-mono nums text-body">{formatMoney(item.unitPriceCents)}</div>
                 <div className="mt-2 flex items-center gap-3 lg:hidden">
                   <QtyStepper value={item.quantity} onChange={(q) => updateQuantity(item.itemId, q)} />

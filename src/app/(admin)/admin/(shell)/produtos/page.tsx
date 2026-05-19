@@ -26,11 +26,18 @@ export default async function ProductsListPage() {
         subtitle="Catálogo"
         title="Produtos"
         action={
-          <Link href={'/admin/produtos/novo/editar' as Route}>
-            <Button variant="primary" size="md" icon={<Icon name="plus" size={14} />}>
-              Novo produto
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={'/admin/produtos/lixeira' as Route}>
+              <Button variant="ghost" size="md" icon={<Icon name="trash" size={14} />}>
+                Lixeira
+              </Button>
+            </Link>
+            <Link href={'/admin/produtos/novo/editar' as Route}>
+              <Button variant="primary" size="md" icon={<Icon name="plus" size={14} />}>
+                Novo produto
+              </Button>
+            </Link>
+          </div>
         }
       />
       <div className="p-6 lg:p-10">

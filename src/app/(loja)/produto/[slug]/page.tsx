@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Route } from 'next';
 import { getProductBySlug, listRelatedProducts } from '@/lib/api/endpoints/products';
 import { Container } from '@/components/ui/container';
-import { ProductGallery } from '@/components/product/product-gallery';
-import { ProductPdpForm } from '@/components/product/product-pdp-form';
+import { ProductView } from '@/components/product/product-view';
 import { ProductTabs } from '@/components/product/product-tabs';
 import { ProductGrid } from '@/components/product/product-grid';
 import { SectionHead } from '@/components/ui/section-head';
@@ -43,8 +42,7 @@ export default async function ProductPage({ params }: Props) {
       </Container>
 
       <Container className="grid gap-8 py-6 pb-16 lg:grid-cols-[1fr_480px] lg:gap-10 lg:pb-24">
-        <ProductGallery images={product.images} productName={product.name} />
-        <ProductPdpForm product={product} />
+        <ProductView product={product} />
       </Container>
 
       <ProductTabs product={product} />

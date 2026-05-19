@@ -165,9 +165,13 @@ export default async function OrderDetailsPage({ params }: Props) {
               )}
               <div>
                 <div className="font-display text-body-xl">{it.productSnapshot.name}</div>
-                <div className="text-body-xs text-ink-60">
-                  {it.productSnapshot.banho} · {it.productSnapshot.size}
-                </div>
+                {it.productSnapshot.attributes?.length > 0 && (
+                  <div className="text-body-xs text-ink-60">
+                    {it.productSnapshot.attributes
+                      .map((a) => `${a.name}: ${a.value}`)
+                      .join(' · ')}
+                  </div>
+                )}
                 <div className="mt-1 text-body-xs">
                   {it.quantity} ×{' '}
                   <span className="font-mono nums">{formatMoney(it.unitPriceCents)}</span>

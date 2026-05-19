@@ -6,12 +6,21 @@ import {
   createAdminCategory,
   createAdminCollection,
   createAdminBanner,
+  createAdminTag,
+  createAdminAttribute,
+  createAdminAttributeValue,
   deleteAdminCategory,
   deleteAdminCollection,
   deleteAdminBanner,
+  deleteAdminTag,
+  deleteAdminAttribute,
+  deleteAdminAttributeValue,
   updateAdminCategory,
   updateAdminCollection,
   updateAdminBanner,
+  updateAdminTag,
+  updateAdminAttribute,
+  updateAdminAttributeValue,
 } from '@/lib/api/endpoints/admin';
 import { getAdminToken } from './admin-session';
 
@@ -82,6 +91,39 @@ export async function deleteCategoryAction(id: string): Promise<void> {
     /* engole */
   }
   revalidatePath('/admin/categorias');
+}
+
+// --------- Tags ---------
+
+export async function saveTagAction(
+  id: string | null,
+  _prev: ActionState | undefined,
+  formData: FormData,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const slug = String(formData.get('slug') ?? '').trim() || undefined;
+  if (!name) return { error: 'Nome obrigatório.' };
+  try {
+    if (id) await updateAdminTag(token, id, { name, slug });
+    else await createAdminTag(token, { name, slug });
+  } catch (err) {
+    return { error: msg(err, 'Erro ao salvar tag.') };
+  }
+  revalidatePath('/admin/tags');
+  return { ok: true };
+}
+
+export async function deleteTagAction(id: string): Promise<void> {
+  const token = await getAdminToken();
+  if (!token) return;
+  try {
+    await deleteAdminTag(token, id);
+  } catch {
+    /* engole */
+  }
+  revalidatePath('/admin/tags');
 }
 
 // --------- Collections ---------
@@ -187,4 +229,113 @@ export async function deleteBannerAction(id: string): Promise<void> {
     /* engole */
   }
   revalidatePath('/admin/banners');
+}
+
+// --------- Attributes ---------
+
+export async function createAttributeAction(
+  _prev: ActionState | undefined,
+  formData: FormData,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const slug = String(formData.get('slug') ?? '').trim() || undefined;
+  const type = (String(formData.get('type') ?? 'SELECT') as 'SELECT' | 'COLOR') || 'SELECT';
+  if (!name) return { error: 'Nome obrigatório.' };
+  try {
+    await createAdminAttribute(token, { name, slug, type });
+  } catch (err) {
+    return { error: msg(err, 'Erro ao criar atributo.') };
+  }
+  revalidatePath('/admin/atributos');
+  return { ok: true };
+}
+
+export async function updateAttributeAction(
+  id: string,
+  _prev: ActionState | undefined,
+  formData: FormData,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const slug = String(formData.get('slug') ?? '').trim() || undefined;
+  const type = (String(formData.get('type') ?? '') as 'SELECT' | 'COLOR') || undefined;
+  if (!name) return { error: 'Nome obrigatório.' };
+  try {
+    await updateAdminAttribute(token, id, { name, slug, type });
+  } catch (err) {
+    return { error: msg(err, 'Erro ao atualizar atributo.') };
+  }
+  revalidatePath('/admin/atributos');
+  return { ok: true };
+}
+
+export async function deleteAttributeAction(id: string): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  try {
+    await deleteAdminAttribute(token, id);
+  } catch (err) {
+    return { error: msg(err, 'Erro ao excluir atributo.') };
+  }
+  revalidatePath('/admin/atributos');
+  return { ok: true };
+}
+
+export async function createAttributeValueAction(
+  attributeId: string,
+  _prev: ActionState | undefined,
+  formData: FormData,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const slug = String(formData.get('slug') ?? '').trim() || undefined;
+  const hex = String(formData.get('hex') ?? '').trim() || undefined;
+  if (!name) return { error: 'Nome obrigatório.' };
+  try {
+    await createAdminAttributeValue(token, attributeId, { name, slug, hex });
+  } catch (err) {
+    return { error: msg(err, 'Erro ao criar valor.') };
+  }
+  revalidatePath('/admin/atributos');
+  return { ok: true };
+}
+
+export async function updateAttributeValueAction(
+  attributeId: string,
+  valueId: string,
+  _prev: ActionState | undefined,
+  formData: FormData,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const slug = String(formData.get('slug') ?? '').trim() || undefined;
+  const hex = String(formData.get('hex') ?? '').trim() || undefined;
+  if (!name) return { error: 'Nome obrigatório.' };
+  try {
+    await updateAdminAttributeValue(token, attributeId, valueId, { name, slug, hex });
+  } catch (err) {
+    return { error: msg(err, 'Erro ao atualizar valor.') };
+  }
+  revalidatePath('/admin/atributos');
+  return { ok: true };
+}
+
+export async function deleteAttributeValueAction(
+  attributeId: string,
+  valueId: string,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  try {
+    await deleteAdminAttributeValue(token, attributeId, valueId);
+  } catch (err) {
+    return { error: msg(err, 'Erro ao excluir valor.') };
+  }
+  revalidatePath('/admin/atributos');
+  return { ok: true };
 }

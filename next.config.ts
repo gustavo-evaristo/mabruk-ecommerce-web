@@ -11,6 +11,13 @@ const nextConfig: NextConfig = {
     ],
   },
   typedRoutes: true,
+  experimental: {
+    serverActions: {
+      // Permite payloads maiores em Server Actions — necessário pra upload de várias fotos
+      // na criação do produto (cada foto pode ter alguns MB). Default do Next é 1MB.
+      bodySizeLimit: '25mb',
+    },
+  },
 };
 
 export default nextConfig;

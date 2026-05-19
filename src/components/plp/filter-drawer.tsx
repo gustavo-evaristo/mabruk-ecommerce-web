@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Category, Collection, Tag } from '@/lib/api/types';
+import type { AvailableAttribute, Category, Collection, Tag } from '@/lib/api/types';
 import { FilterSidebar } from './filter-sidebar';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ interface Props {
   collections: Collection[];
   tags: Tag[];
   activeCategorySlug?: string;
+  availableAttributes: AvailableAttribute[];
   filters: PLPFilters;
   onFiltersChange: (next: PLPFilters) => void;
 }
@@ -22,6 +23,7 @@ export function FilterDrawer({
   collections,
   tags,
   activeCategorySlug,
+  availableAttributes,
   filters,
   onFiltersChange,
 }: Props) {
@@ -83,6 +85,7 @@ export function FilterDrawer({
             collections={collections}
             tags={tags}
             activeCategorySlug={activeCategorySlug}
+            availableAttributes={availableAttributes}
             filters={filters}
             onFiltersChange={onFiltersChange}
           />

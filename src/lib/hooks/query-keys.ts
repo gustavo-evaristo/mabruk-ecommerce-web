@@ -54,6 +54,7 @@ export const queryKeys = {
     collections: ['admin', 'collections'] as const,
     banners: ['admin', 'banners'] as const,
     categories: ['admin', 'categories'] as const,
+    attributes: ['admin', 'attributes'] as const,
     promotions: (type?: string) => ['admin', 'promotions', type ?? 'all'] as const,
     landings: ['admin', 'landings'] as const,
     settings: ['admin', 'settings'] as const,

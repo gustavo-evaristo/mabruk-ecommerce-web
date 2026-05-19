@@ -79,7 +79,10 @@ export function ProductTabs({ product }: Props) {
           <div className="max-w-[720px]">
             <div className="flex flex-col">
               {[
-                ['Banho', product.variants[0]?.banho.replace('_', ' ') ?? '—'],
+                ...product.attributes.map<[string, string]>((attr) => [
+                  attr.name,
+                  attr.values.map((v) => v.name).join(', ') || '—',
+                ]),
                 ['Camadas de banho', '3 micras'],
                 ['Material base', 'Latão hipoalergênico'],
                 ['Peso', product.weightInGrams ? `${product.weightInGrams} g` : '—'],

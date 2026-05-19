@@ -16,11 +16,9 @@ type PaymentMethod = 'credit' | 'pix';
 
 const SHIPPING_PRICE_CENTS = 2990;
 
-const BANHO_LABEL: Record<string, string> = {
-  OURO_18K: 'Ouro 18k',
-  PRATA_925: 'Prata 925',
-  ACO_INOX: 'Aço inoxidável',
-};
+function formatAttrs(attrs: { name: string; value: string }[]): string {
+  return attrs.map((a) => `${a.name}: ${a.value}`).join(' · ');
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -369,9 +367,11 @@ export default function CheckoutPage() {
                     </div>
                     <div className="min-w-0">
                       <div className="font-display text-body-xl leading-tight">{item.productName}</div>
-                      <div className="text-body-xs text-ink-60">
-                        {BANHO_LABEL[item.banho] ?? item.banho} · {item.size}
-                      </div>
+                      {item.attributes.length > 0 && (
+                        <div className="text-body-xs text-ink-60">
+                          {formatAttrs(item.attributes)}
+                        </div>
+                      )}
                     </div>
                     <div className="font-mono nums text-body-sm">
                       {formatMoney(item.unitPriceCents * item.quantity)}

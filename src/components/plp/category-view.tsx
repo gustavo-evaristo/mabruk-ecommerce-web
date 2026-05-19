@@ -42,7 +42,7 @@ export function CategoryView({
   const [view, setView] = useState<View>('grid');
 
   return (
-    <>
+    <section className="min-w-0">
       {/* Toolbar */}
       <div className="mb-6 flex items-center justify-end gap-3 border-b border-line py-3.5 lg:-mt-12 lg:gap-6">
         <div className="flex items-center gap-2 text-eyebrow font-medium uppercase">
@@ -132,7 +132,7 @@ export function CategoryView({
       <p className="mt-8 text-center font-mono nums text-body-xs text-ink-60">
         {total} {total === 1 ? 'peça' : 'peças'} no total
       </p>
-    </>
+    </section>
   );
 }
 

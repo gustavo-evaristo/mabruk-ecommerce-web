@@ -13,6 +13,8 @@ import {
   listAdminCollections,
   listAdminCategories,
   listAdminBanners,
+  listAdminAttributes,
+  type AdminAttribute,
 } from '@/lib/api/endpoints/admin';
 import {
   listAdminPromotions,
@@ -154,6 +156,15 @@ export function useAdminBanners(token: string, opts?: Options<AdminBanner[]>) {
   return useQuery({
     queryKey: queryKeys.admin.banners,
     queryFn: () => listAdminBanners(token),
+    enabled: Boolean(token),
+    ...opts,
+  });
+}
+
+export function useAdminAttributes(token: string, opts?: Options<AdminAttribute[]>) {
+  return useQuery({
+    queryKey: queryKeys.admin.attributes,
+    queryFn: () => listAdminAttributes(token),
     enabled: Boolean(token),
     ...opts,
   });

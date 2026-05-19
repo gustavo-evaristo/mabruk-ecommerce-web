@@ -109,10 +109,10 @@ export function ProductsTable({ token, initialData }: Props) {
                 className="grid items-center gap-3 border-b border-line px-4 py-3.5 text-body-sm hover:bg-cream/40 lg:gap-4 lg:grid-cols-[60px_1fr_100px_120px_120px_40px]"
               >
                 <div className="size-12 bg-cream">
-                  {p.imageUrl && (
+                  {p.image?.url && (
                     <img
-                      src={p.imageUrl}
-                      alt={p.name}
+                      src={p.image.url}
+                      alt={p.image.alt ?? p.name}
                       className="size-12 object-cover"
                     />
                   )}
