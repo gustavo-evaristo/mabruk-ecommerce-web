@@ -184,6 +184,7 @@ function CategoryImageCell({ category }: { category: AdminCategory }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -217,24 +218,33 @@ function CategoryImageCell({ category }: { category: AdminCategory }) {
         className="hidden"
         id={`cat-img-${category.id}`}
       />
-      {category.imageUrl ? (
+      {category.imageUrl && !loadError ? (
         <button
           type="button"
           onClick={onRemove}
           disabled={pending}
-          title="Clique para remover"
+          title={`Clique para remover · ${category.imageUrl}`}
           className="group relative block size-12 overflow-hidden border border-line bg-cream"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={category.imageUrl}
             alt={category.name}
+            onError={() => setLoadError(true)}
             className="size-full object-cover"
           />
           <span className="absolute inset-0 hidden place-items-center bg-ink/60 text-paper group-hover:grid">
             <Icon name="trash" size={14} />
           </span>
         </button>
+      ) : category.imageUrl && loadError ? (
+        <label
+          htmlFor={`cat-img-${category.id}`}
+          title={`Falha ao carregar: ${category.imageUrl}`}
+          className="grid size-12 cursor-pointer place-items-center border border-sale bg-[rgba(140,58,46,0.08)] text-sale"
+        >
+          <Icon name="close" size={16} />
+        </label>
       ) : (
         <label
           htmlFor={`cat-img-${category.id}`}

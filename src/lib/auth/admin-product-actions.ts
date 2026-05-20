@@ -153,7 +153,6 @@ export async function saveProductAction(
         .getAll('photos')
         .filter((v): v is File => v instanceof File && v.size > 0);
       const photoVariantSkus = formData.getAll('photoVariantSkus').map(String);
-      console.log(`[saveProductAction] uploading ${photos.length} photo(s) for product ${result.id}`);
       for (let i = 0; i < photos.length; i++) {
         const file = photos[i];
         const sku = photoVariantSkus[i] ?? '';
@@ -167,9 +166,8 @@ export async function saveProductAction(
             body: fd,
             token,
           });
-          console.log(`  ✓ uploaded ${file.name} (${file.size}B)${variantId ? ` → variant ${sku}` : ''}`);
-        } catch (uploadErr) {
-          console.error(`  ✗ FAILED to upload ${file.name}:`, uploadErr);
+        } catch {
+          /* ignora falha individual — produto já existe, user pode subir depois */
         }
       }
       revalidatePath('/admin/produtos');
