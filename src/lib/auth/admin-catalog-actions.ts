@@ -21,6 +21,7 @@ import {
   updateAdminTag,
   updateAdminAttribute,
   updateAdminAttributeValue,
+  uploadAdminCategoryImage,
 } from '@/lib/api/endpoints/admin';
 import { getAdminToken } from './admin-session';
 
@@ -91,6 +92,40 @@ export async function deleteCategoryAction(id: string): Promise<void> {
     /* engole */
   }
   revalidatePath('/admin/categorias');
+  revalidatePath('/', 'layout');
+}
+
+export async function uploadCategoryImageAction(
+  id: string,
+  formData: FormData,
+): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  const file = formData.get('file');
+  if (!file || !(file instanceof File) || file.size === 0) {
+    return { error: 'Selecione uma imagem.' };
+  }
+  try {
+    await uploadAdminCategoryImage(token, id, file);
+  } catch (err) {
+    return { error: msg(err, 'Erro ao subir imagem.') };
+  }
+  revalidatePath('/admin/categorias');
+  revalidatePath('/', 'layout');
+  return { ok: true };
+}
+
+export async function removeCategoryImageAction(id: string): Promise<ActionState> {
+  const token = await getAdminToken();
+  if (!token) return { error: 'Sessão expirada.' };
+  try {
+    await updateAdminCategory(token, id, { imageUrl: null });
+  } catch (err) {
+    return { error: msg(err, 'Erro ao remover imagem.') };
+  }
+  revalidatePath('/admin/categorias');
+  revalidatePath('/', 'layout');
+  return { ok: true };
 }
 
 // --------- Tags ---------

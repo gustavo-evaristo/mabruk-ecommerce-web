@@ -7,7 +7,9 @@ import { Icon } from '@/components/ui/icon';
 import {
   createCategoryAction,
   deleteCategoryAction,
+  removeCategoryImageAction,
   updateCategoryAction,
+  uploadCategoryImageAction,
   type ActionState,
 } from '@/lib/auth/admin-catalog-actions';
 import type { AdminCategory } from '@/lib/api/endpoints/admin';
@@ -104,8 +106,9 @@ function CategoryRow({
         className={`grid items-center gap-3 py-3.5 ${
           !isLast ? 'border-b border-line' : ''
         }`}
-        style={{ gridTemplateColumns: '1fr 1fr 100px auto' }}
+        style={{ gridTemplateColumns: '56px 1fr 1fr 100px auto' }}
       >
+        <CategoryImageCell category={category} />
         <input name="name" defaultValue={category.name} required />
         <input
           name="slug"
@@ -143,8 +146,9 @@ function CategoryRow({
       className={`grid items-center gap-3 py-3.5 text-body-sm ${
         !isLast ? 'border-b border-line' : ''
       }`}
-      style={{ gridTemplateColumns: '1fr 1fr 80px auto' }}
+      style={{ gridTemplateColumns: '56px 1fr 1fr 80px auto' }}
     >
+      <CategoryImageCell category={category} />
       <span className="font-medium">{category.name}</span>
       <span className="font-mono text-eyebrow text-ink-60">/{category.slug}</span>
       <span
@@ -172,6 +176,88 @@ function CategoryRow({
           <Icon name="trash" size={14} />
         </button>
       </div>
+    </div>
+  );
+}
+
+function CategoryImageCell({ category }: { category: AdminCategory }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError(null);
+    setPending(true);
+    const fd = new FormData();
+    fd.set('file', file);
+    const r = await uploadCategoryImageAction(category.id, fd);
+    setPending(false);
+    if (r.error) setError(r.error);
+    if (inputRef.current) inputRef.current.value = '';
+  }
+
+  async function onRemove() {
+    if (!confirm(`Remover imagem de "${category.name}"?`)) return;
+    setPending(true);
+    setError(null);
+    const r = await removeCategoryImageAction(category.id);
+    setPending(false);
+    if (r.error) setError(r.error);
+  }
+
+  return (
+    <div className="relative">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={onPick}
+        className="hidden"
+        id={`cat-img-${category.id}`}
+      />
+      {category.imageUrl ? (
+        <button
+          type="button"
+          onClick={onRemove}
+          disabled={pending}
+          title="Clique para remover"
+          className="group relative block size-12 overflow-hidden border border-line bg-cream"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={category.imageUrl}
+            alt={category.name}
+            className="size-full object-cover"
+          />
+          <span className="absolute inset-0 hidden place-items-center bg-ink/60 text-paper group-hover:grid">
+            <Icon name="trash" size={14} />
+          </span>
+        </button>
+      ) : (
+        <label
+          htmlFor={`cat-img-${category.id}`}
+          title="Subir imagem"
+          className="grid size-12 cursor-pointer place-items-center border border-dashed border-ink-20 bg-cream text-ink-60 hover:border-ink hover:text-ink"
+        >
+          <Icon name={pending ? 'upload' : 'plus'} size={16} />
+        </label>
+      )}
+      {category.imageUrl && (
+        <label
+          htmlFor={`cat-img-${category.id}`}
+          title="Trocar imagem"
+          className="absolute -bottom-1 -right-1 grid size-5 cursor-pointer place-items-center border border-line bg-paper text-ink-60 hover:text-ink"
+        >
+          <Icon name="edit" size={10} />
+        </label>
+      )}
+      {error && (
+        <div className="absolute top-full left-0 z-10 mt-1 whitespace-nowrap text-eyebrow text-sale">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

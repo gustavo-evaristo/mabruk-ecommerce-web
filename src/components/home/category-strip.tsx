@@ -2,23 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Route } from 'next';
 import type { Category } from '@/lib/api/types';
+import { Icon } from '@/components/ui/icon';
 import { Container } from '@/components/ui/container';
-
-const CATEGORY_IMAGES: Record<string, string> = {
-  aneis: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=80',
-  brincos:
-    'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=400&q=80',
-  colares:
-    'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=400&q=80',
-  pulseiras:
-    'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=400&q=80',
-  braceletes:
-    'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=400&q=80',
-  tornozeleiras:
-    'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=80',
-  conjuntos:
-    'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=400&q=80',
-};
 
 interface Props {
   categories: Category[];
@@ -36,13 +21,19 @@ export function CategoryStrip({ categories }: Props) {
               className="liftable flex flex-col items-center gap-3"
             >
               <div className="relative size-20 overflow-hidden rounded-full bg-cream md:size-28">
-                <Image
-                  src={CATEGORY_IMAGES[cat.slug] ?? CATEGORY_IMAGES.aneis}
-                  alt={cat.name}
-                  fill
-                  sizes="120px"
-                  className="object-cover"
-                />
+                {cat.imageUrl ? (
+                  <Image
+                    src={cat.imageUrl}
+                    alt={cat.name}
+                    fill
+                    sizes="(min-width:768px) 112px, 80px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="grid size-full place-items-center text-ink-40">
+                    <Icon name="box" size={28} />
+                  </div>
+                )}
               </div>
               <span className="text-eyebrow-sm font-medium uppercase tracking-eyebrow md:text-eyebrow md:tracking-eyebrow-lg">
                 {cat.name}

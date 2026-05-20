@@ -128,6 +128,7 @@ export interface AdminCategory {
   id: string;
   slug: string;
   name: string;
+  imageUrl: string | null;
   order: number;
   isActive: boolean;
 }
@@ -147,9 +148,25 @@ export async function createAdminCategory(
 export async function updateAdminCategory(
   token: string,
   id: string,
-  body: Partial<{ name: string; slug: string; order: number; isActive: boolean }>,
+  body: Partial<{
+    name: string;
+    slug: string;
+    imageUrl: string | null;
+    order: number;
+    isActive: boolean;
+  }>,
 ): Promise<{ id: string; slug: string }> {
   return apiFetch(`/b2b/categories/${id}`, { method: 'PATCH', body, token });
+}
+
+export async function uploadAdminCategoryImage(
+  token: string,
+  id: string,
+  file: File,
+): Promise<{ id: string; imageUrl: string | null }> {
+  const fd = new FormData();
+  fd.set('file', file);
+  return apiFetch(`/b2b/categories/${id}/image`, { method: 'POST', body: fd, token });
 }
 
 export async function deleteAdminCategory(token: string, id: string): Promise<void> {
